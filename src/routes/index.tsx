@@ -47,7 +47,9 @@ const steps = [
 ];
 
 function Index() {
+  const openCount = roommates.filter(isOpen).length;
   return (
+
     <main className="min-h-screen bg-background text-foreground">
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
