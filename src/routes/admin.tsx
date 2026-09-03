@@ -389,3 +389,21 @@ function AdminPage() {
     </main>
   );
 }
+
+function Stat({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string | number;
+  hint?: string;
+}) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+      <p className="text-[10px] uppercase tracking-widest text-white/40">{label}</p>
+      <p className="mt-1 text-2xl font-black">{value}</p>
+      {hint && <p className="text-[11px] text-white/40">{hint}</p>}
+    </div>
+  );
+}
