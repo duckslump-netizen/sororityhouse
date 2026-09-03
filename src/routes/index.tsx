@@ -77,7 +77,15 @@ function Index() {
 
 
     <main className="min-h-screen bg-background text-foreground">
-      <nav className="absolute inset-x-0 top-0 z-20 flex justify-end px-6 py-5">
+      <nav className="absolute inset-x-0 top-0 z-20 flex justify-end gap-6 px-6 py-5">
+        {user && (
+          <Link
+            to="/room"
+            className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
+          >
+            Common room
+          </Link>
+        )}
         <Link
           to={user ? "/account" : "/auth"}
           className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"

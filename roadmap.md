@@ -12,3 +12,5 @@
 ## Later
 - [ ] Trust levels driving unlocks + real scoreboard data
 - [ ] Shared house conversations (multiple girls in one chat)
+
+- [x] Shared common room (/room) — whole house in one conversation
