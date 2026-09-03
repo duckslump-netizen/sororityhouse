@@ -90,9 +90,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       if (!stripePrice) throw new Error("Price not found");
 
       const customerId = await resolveOrCreateCustomer(stripe, {
-        email: user?.email ?? undefined,
+        ...(user?.email ? { email: user.email } : {}),
         userId,
       });
+
 
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
