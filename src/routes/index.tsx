@@ -85,10 +85,13 @@ function Index() {
         <div className="absolute inset-0 bg-veil" />
         <div className="relative mx-auto flex min-h-[70vh] max-w-5xl flex-col items-center justify-center px-6 pb-16 pt-28 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">A social experiment</p>
-          <h1 className="mt-5 text-6xl leading-[0.92] sm:text-8xl">
-            Can you <span className="text-gradient-neon">get through them all?</span>
+          <h1 className="mt-5 text-5xl leading-[0.92] sm:text-8xl">
+            Welcome to the <span className="text-gradient-neon">sorority house</span>
           </h1>
-          <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
+          <p className="mt-6 text-lg text-foreground sm:text-2xl">
+            Can you survive or will you thrive?
+          </p>
+          <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
             Think you're a Casanova? I doubt it.
           </p>
           <p className="mt-2 text-lg text-foreground sm:text-xl">
@@ -108,15 +111,25 @@ function Index() {
               type="button"
               className="group text-center"
             >
-              <div className="overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
+              <div className="relative overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
                 <img
                   src={r.img}
-                  alt={`Portrait of ${r.name}`}
+                  alt={r.locked ? `Locked door for ${r.name}` : `Portrait of ${r.name}`}
                   loading="lazy"
                   width={768}
                   height={960}
-                  className="h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className={`h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                    r.locked ? "scale-105 blur-lg brightness-75" : ""
+                  }`}
                 />
+                {r.locked && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/40">
+                    <Lock className="h-7 w-7 text-accent" aria-hidden="true" />
+                    <span className="text-[0.6rem] uppercase tracking-[0.3em] text-accent">
+                      Door still shut
+                    </span>
+                  </div>
+                )}
               </div>
               <h3 className="mt-4 text-3xl">{r.name}</h3>
               <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
@@ -125,8 +138,8 @@ function Index() {
           ))}
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
-          Four roommates share one apartment and a whole lot of emotional armor. Talk to Dakota, Zoe,
-          Willow and Brittany — and find out how far honesty actually gets you.
+          Four roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
+          two open doors. Willow and Brittany stay behind theirs until you prove you're worth it.
         </p>
         <div className="mt-6 flex justify-center">
           <Button variant="hero" size="lg">
@@ -137,6 +150,32 @@ function Index() {
           No card required. The trial ends at message 100.
         </p>
       </section>
+
+      {/* Hallway */}
+      <section className="relative isolate overflow-hidden border-y border-border">
+        <img
+          src={hallway}
+          alt="Sorority house hallway at night with two doors open, eight shut, and a red fire exit sign"
+          loading="lazy"
+          width={1600}
+          height={912}
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
+        />
+        <div className="absolute inset-0 bg-veil" />
+        <div className="relative mx-auto max-w-3xl px-6 py-28 text-center">
+          <p className="text-xs uppercase tracking-[0.35em] text-accent">
+            Two doors open. Eight shut.
+          </p>
+          <h2 className="mt-5 text-4xl leading-tight sm:text-5xl">
+            Are you charming enough to get through everyone — or will you have to{" "}
+            <span className="text-gradient-neon">go back to school?</span>
+          </h2>
+          <p className="mt-6 text-sm text-muted-foreground">
+            The fire exit is always right there at the end of the hall.
+          </p>
+        </div>
+      </section>
+
 
       {/* Scoreboard */}
       <section className="mx-auto max-w-4xl px-6 pb-20">
