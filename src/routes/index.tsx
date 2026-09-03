@@ -112,13 +112,49 @@ function Index() {
               </div>
               <h3 className="mt-4 text-3xl">{r.name}</h3>
               <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.line}</p>
             </button>
           ))}
         </div>
-        <p className="mt-8 text-center text-xs text-muted-foreground">
+        <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
+          Four roommates share one apartment and a whole lot of emotional armor. Talk to Dakota, Zoe,
+          Willow and Brittany — and find out how far honesty actually gets you.
+        </p>
+        <div className="mt-6 flex justify-center">
+          <Button variant="hero" size="lg">
+            Start free — 100 messages
+          </Button>
+        </div>
+        <p className="mt-4 text-center text-xs text-muted-foreground">
           No card required. The trial ends at message 100.
         </p>
       </section>
+
+      {/* Scoreboard */}
+      <section className="mx-auto max-w-4xl px-6 pb-20">
+        <h2 className="text-center text-4xl sm:text-5xl">The scoreboard</h2>
+        <p className="mt-3 text-center text-sm uppercase tracking-[0.3em] text-accent">
+          How far have you made it?
+        </p>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+          {roommates.map((r) => (
+            <div
+              key={r.name}
+              className="glass-card flex items-center justify-between rounded-2xl px-6 py-5"
+            >
+              <span className="text-2xl">{r.name} reached</span>
+              <span className="text-gradient-neon font-display text-3xl">0/4</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 rounded-2xl border border-primary/40 px-6 py-6 text-center">
+          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+            Players who reached all four
+          </p>
+          <p className="text-gradient-neon mt-2 font-display text-6xl">0</p>
+        </div>
+      </section>
+
 
 
       {/* How it works */}
