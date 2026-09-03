@@ -321,8 +321,16 @@ function Index() {
               <li>Sasha &amp; Piper unlocked behind their doors</li>
               <li>Shared house conversations with all six</li>
             </ul>
-            <Button variant="neon" size="lg" className="mt-8 w-full">
-              Unlock the full house
+            <Button
+              variant="neon"
+              size="lg"
+              className="mt-8 w-full"
+              disabled={!!pending}
+              onClick={() => subscribe(PLANS.full_house_monthly.priceId)}
+            >
+              {pending === PLANS.full_house_monthly.priceId
+                ? "Opening checkout…"
+                : "Unlock the full house"}
             </Button>
           </div>
         </div>
