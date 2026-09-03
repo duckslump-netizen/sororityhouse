@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getStripeEnvironment, PLANS, type PlanPriceId } from "@/lib/stripe";
+import { PLANS, type PlanPriceId } from "@/lib/stripe";
 import { useAuth } from "@/hooks/useAuth";
+import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
 
 export type SubscriptionRow = {
   price_id: string;
@@ -12,34 +13,27 @@ export type SubscriptionRow = {
 
 export function useSubscription() {
   const { user, loading: authLoading } = useAuth();
+  const environment = usePaymentsEnvironment();
   const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    if (!user) {
+    if (!user || !environment) {
       setSubscription(null);
-      setLoading(false);
-      return;
-    }
-    let env: "sandbox" | "live";
-    try {
-      env = getStripeEnvironment();
-    } catch {
-      setSubscription(null);
-      setLoading(false);
+      setLoading(!!user && !environment);
       return;
     }
     const { data } = await supabase
       .from("subscriptions")
       .select("price_id, status, current_period_end, cancel_at_period_end")
       .eq("user_id", user.id)
-      .eq("environment", env)
+      .eq("environment", environment)
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
     setSubscription((data as SubscriptionRow | null) ?? null);
     setLoading(false);
-  }, [user]);
+  }, [user, environment]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -87,6 +81,7 @@ export function useSubscription() {
     isActive,
     isPastDue: subscription?.status === "past_due",
     plan: isActive ? plan : null,
+    /** 0 = free trial, 1 = Founders (first four), 2 = Full House (all six). */
     tier: isActive ? (plan?.tier ?? 0) : 0,
     refresh: load,
   };
