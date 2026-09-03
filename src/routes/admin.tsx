@@ -140,11 +140,68 @@ function AdminPage() {
         </Link>
       </header>
 
-      <div className="mb-6 flex justify-end">
+      {stats && (
+        <section className="mb-10">
+          <h2 className="mb-3 text-xs uppercase tracking-widest text-white/40">
+            Your numbers
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Stat label="Members" value={stats.members} />
+            <Stat label="Paying" value={stats.members - stats.freeMembers} />
+            <Stat label="Monthly revenue" value={`$${stats.mrr.toFixed(2)}`} />
+            <Stat label="Active chats (7d)" value={stats.activeChats7d} />
+            {stats.plans.map((p) => (
+              <Stat
+                key={p.priceId}
+                label={`${p.name} · ${p.price}`}
+                value={p.count}
+                hint="members"
+              />
+            ))}
+            <Stat label="Free / trial" value={stats.freeMembers} />
+            <Stat label="Cancelling" value={stats.cancelling} hint={`${stats.pastDue} past due`} />
+            <Stat label="Messages (24h)" value={stats.messages24h} hint={`${stats.messagesTotal} all time`} />
+            <Stat label="Chatters (7d)" value={stats.activeMembers7d} />
+          </div>
+
+          {stats.perCharacter.length > 0 && (
+            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-4">
+              <p className="mb-3 text-xs uppercase tracking-widest text-white/40">
+                Chat activity by girl (last 7 days)
+              </p>
+              <ul className="space-y-2">
+                {stats.perCharacter.map((c) => {
+                  const top = stats.perCharacter[0]?.messages || 1;
+                  return (
+                    <li key={c.characterId} className="text-sm">
+                      <div className="mb-1 flex justify-between">
+                        <span className="capitalize">{c.characterId}</span>
+                        <span className="text-white/50">
+                          {c.messages} messages · {c.chatters} chatting
+                        </span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-white/10">
+                        <div
+                          className="h-1.5 rounded-full bg-primary"
+                          style={{ width: `${Math.round((c.messages / top) * 100)}%` }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
+
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-xs uppercase tracking-widest text-white/40">Characters</h2>
         <Button size="sm" onClick={() => setDraft({ ...EMPTY })}>
           Add character
         </Button>
       </div>
+
 
       <ul className="space-y-3">
         {rows.map((r) => (
