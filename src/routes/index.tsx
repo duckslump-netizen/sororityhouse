@@ -143,18 +143,57 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-veil" />
-        <div className="relative mx-auto max-w-3xl px-6 py-28 text-center">
+        <div className="relative mx-auto max-w-4xl px-6 py-28 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">
-            Two doors open. Eight shut.
+            {openCount} {openCount === 1 ? "door" : "doors"} open. {TOTAL_DOORS - openCount} shut.
           </p>
           <h2 className="mt-5 text-4xl leading-tight sm:text-5xl">
             Are you charming enough to get through everyone — or will you have to{" "}
             <span className="text-gradient-neon">go back to school?</span>
           </h2>
-          <p className="mt-6 text-sm text-muted-foreground">
-            The fire exit is always right there at the end of the hall.
+
+          {/* The hall of doors — extras are reserved for future sorority members */}
+          <div className="mt-12 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+            {roommates.map((r) => (
+              <div
+                key={r.id}
+                className={`glass-card flex aspect-[2/3] flex-col items-center justify-center gap-2 rounded-xl px-2 ${
+                  isOpen(r) ? "border-primary/60 shadow-glow" : ""
+                }`}
+              >
+                {isOpen(r) ? (
+                  <DoorClosed className="h-6 w-6 text-primary" aria-hidden="true" />
+                ) : (
+                  <Lock className="h-5 w-5 text-accent" aria-hidden="true" />
+                )}
+                <span className="text-lg leading-none">{r.name}</span>
+                <span className="text-[0.5rem] uppercase tracking-[0.25em] text-muted-foreground">
+                  {unlockLabel(r.unlock)}
+                </span>
+              </div>
+            ))}
+            {reservedDoors.map((d) => (
+              <div
+                key={d.id}
+                className="flex aspect-[2/3] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/70 px-2 opacity-60"
+              >
+                <DoorClosed className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                <span className="font-display text-lg leading-none text-muted-foreground">
+                  {d.number}
+                </span>
+                <span className="text-[0.5rem] uppercase tracking-[0.25em] text-muted-foreground">
+                  Reserved
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-sm text-muted-foreground">
+            {TOTAL_DOORS} doors in the house. Six are hers. The rest are waiting on new sisters —
+            and the fire exit is always right there at the end of the hall.
           </p>
         </div>
+
       </section>
 
 
