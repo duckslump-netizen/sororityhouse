@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Lock, DoorClosed } from "lucide-react";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
-import dakota from "@/assets/dakota.jpg";
-import zoe from "@/assets/zoe.jpg";
-import willow from "@/assets/willow.jpg";
-import brittany from "@/assets/brittany.jpg";
-import harper from "@/assets/harper.jpg";
-import piper from "@/assets/piper.jpg";
+import {
+  characters as roommates,
+  reservedDoors,
+  TOTAL_DOORS,
+  isOpen,
+  unlockLabel,
+} from "@/lib/characters";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
