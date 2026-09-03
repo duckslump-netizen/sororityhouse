@@ -281,7 +281,7 @@ function Index() {
               <li>No card required</li>
               <li>Live message counter</li>
             </ul>
-            <Button variant="neon" size="lg" className="mt-8 w-full">
+            <Button variant="neon" size="lg" className="mt-8 w-full" onClick={startTrial}>
               Start the trial
             </Button>
           </div>
