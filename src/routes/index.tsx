@@ -48,7 +48,29 @@ const steps = [
 
 function Index() {
   const openCount = roommates.filter(isOpen).length;
+  const { user } = useAuth();
+  const { isActive } = useSubscription();
+  const { openCheckout, openBillingPortal, pending } = useCheckout();
+  const navigate = useNavigate();
+
+  function startTrial() {
+    void navigate({ to: user ? "/account" : "/auth" });
+  }
+
+  function subscribe(priceId: string) {
+    if (!user) {
+      void navigate({ to: "/auth" });
+      return;
+    }
+    if (isActive) {
+      void openBillingPortal();
+      return;
+    }
+    void openCheckout(priceId);
+  }
+
   return (
+
 
     <main className="min-h-screen bg-background text-foreground">
       {/* Hero */}
