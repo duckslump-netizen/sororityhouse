@@ -16,6 +16,7 @@ export function useSubscription() {
   const environment = usePaymentsEnvironment();
   const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const load = useCallback(async () => {
     if (!user || !environment) {
@@ -39,6 +40,27 @@ export function useSubscription() {
     if (authLoading) return;
     void load();
   }, [authLoading, load]);
+
+  // Owner/admin accounts get full access so the product can be tested for free.
+  useEffect(() => {
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    let cancelled = false;
+    void supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("role", "admin")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!cancelled) setIsAdmin(!!data);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -76,13 +98,14 @@ export function useSubscription() {
       : null;
 
   return {
+    isAdmin,
     subscription,
     loading: loading || authLoading,
-    isActive,
+    isActive: isActive || isAdmin,
     isPastDue: subscription?.status === "past_due",
     plan: isActive ? plan : null,
     /** 0 = free trial, 1 = Founders (first four), 2 = Full House (all six). */
-    tier: isActive ? (plan?.tier ?? 0) : 0,
+    tier: isAdmin ? 2 : isActive ? (plan?.tier ?? 0) : 0,
     refresh: load,
   };
 }

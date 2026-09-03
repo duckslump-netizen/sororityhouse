@@ -47,7 +47,12 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       !!sub &&
       periodOk &&
       ["active", "trialing", "past_due", "canceled"].includes(sub.status);
-    const tier = active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
+    // Owner/admin accounts can test every door for free, always.
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    const tier = isAdmin === true ? 2 : active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -59,7 +64,7 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       .eq("character_id", data.characterId)
       .maybeSingle();
 
-    if (setting && setting.enabled === false) {
+    if (setting && setting.enabled === false && isAdmin !== true) {
       return { error: "That door is closed right now.", limited: true };
     }
 
