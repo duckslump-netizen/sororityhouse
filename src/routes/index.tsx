@@ -7,6 +7,8 @@ import dakota from "@/assets/dakota.jpg";
 import zoe from "@/assets/zoe.jpg";
 import willow from "@/assets/willow.jpg";
 import brittany from "@/assets/brittany.jpg";
+import harper from "@/assets/harper.jpg";
+import sienna from "@/assets/sienna.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -59,6 +61,20 @@ const roommates = [
     locked: true,
     line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
   },
+  {
+    name: "Harper",
+    img: harper,
+    tag: "The wildcard",
+    locked: true,
+    line: "Sharp, restless, and always three steps ahead of the conversation. Harper will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
+  },
+  {
+    name: "Sienna",
+    img: sienna,
+    tag: "The closed book",
+    locked: true,
+    line: "Composed, watchful, and impossible to rush. Sienna gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
+  },
 ];
 
 
@@ -104,7 +120,7 @@ function Index() {
       {/* Pick your girl */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-center text-4xl sm:text-5xl">Pick your girl</h2>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {roommates.map((r) => (
             <button
               key={r.name}
@@ -138,8 +154,9 @@ function Index() {
           ))}
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
-          Four roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
-          two open doors. Willow and Brittany stay behind theirs until you prove you're worth it.
+          Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
+          two open doors. Willow, Brittany, Harper and Sienna stay behind theirs until you prove
+          you're worth it.
         </p>
         <div className="mt-6 flex justify-center">
           <Button variant="hero" size="lg">
@@ -196,7 +213,7 @@ function Index() {
         </div>
         <div className="mt-6 rounded-2xl border border-primary/40 px-6 py-6 text-center">
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Players who reached all four
+            Players who reached all six
           </p>
           <p className="text-gradient-neon mt-2 font-display text-6xl">0</p>
         </div>
