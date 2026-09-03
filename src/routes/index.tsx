@@ -74,61 +74,44 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 bg-veil" />
-        <div className="relative mx-auto flex min-h-[92vh] max-w-5xl flex-col justify-end px-6 pb-20 pt-28">
+        <div className="relative mx-auto flex min-h-[70vh] max-w-5xl flex-col items-center justify-center px-6 pb-16 pt-28 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">A social experiment</p>
           <h1 className="mt-5 text-6xl leading-[0.92] sm:text-8xl">
-            Can you
-            <br />
-            <span className="text-gradient-neon">get through?</span>
+            Can you <span className="text-gradient-neon">get through?</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Four roommates share one apartment and a whole lot of emotional armor. Pick your girl —
-            Dakota, Zoe, Willow or Brittany — and find out how far honesty actually gets you.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Button variant="hero" size="xl">
-              Pick your girl
-            </Button>
-            <Button variant="neon" size="xl">
-              See the pricing
-            </Button>
-
-          </div>
-          <p className="mt-4 text-xs text-muted-foreground">
-            No card required. The trial ends at message 100.
-          </p>
         </div>
       </section>
 
-      {/* Roommates */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="text-4xl sm:text-5xl">The apartment</h2>
-        <p className="mt-3 max-w-lg text-muted-foreground">
-          Every one of them guards something different. The experiment is figuring out what.
-        </p>
+      {/* Pick your girl */}
+      <section className="mx-auto max-w-6xl px-6 py-20">
+        <h2 className="text-center text-4xl sm:text-5xl">Pick your girl</h2>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {roommates.map((r) => (
-            <article
+            <button
               key={r.name}
-              className="group relative overflow-hidden rounded-2xl border border-border shadow-soft transition-transform duration-300 hover:-translate-y-1"
+              type="button"
+              className="group text-center"
             >
-              <img
-                src={r.img}
-                alt={`Portrait of ${r.name}`}
-                loading="lazy"
-                width={768}
-                height={960}
-                className="h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-x-0 bottom-0 bg-veil p-5">
-                <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
-                <h3 className="mt-1 text-3xl">{r.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{r.line}</p>
+              <div className="overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
+                <img
+                  src={r.img}
+                  alt={`Portrait of ${r.name}`}
+                  loading="lazy"
+                  width={768}
+                  height={960}
+                  className="h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
-            </article>
+              <h3 className="mt-4 text-3xl">{r.name}</h3>
+              <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
+            </button>
           ))}
         </div>
+        <p className="mt-8 text-center text-xs text-muted-foreground">
+          No card required. The trial ends at message 100.
+        </p>
       </section>
+
 
       {/* How it works */}
       <section className="border-y border-border bg-card/40">
