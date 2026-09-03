@@ -8,7 +8,7 @@ import zoe from "@/assets/zoe.jpg";
 import willow from "@/assets/willow.jpg";
 import brittany from "@/assets/brittany.jpg";
 import harper from "@/assets/harper.jpg";
-import sienna from "@/assets/sienna.jpg";
+import piper from "@/assets/piper.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
