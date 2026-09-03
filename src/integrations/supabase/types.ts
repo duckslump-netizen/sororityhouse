@@ -35,6 +35,33 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          character_id: string
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          character_id: string
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          character_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -116,6 +143,7 @@ export type Database = {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
       }
+      increment_message_usage: { Args: { _user_id: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never
