@@ -21,8 +21,6 @@
 @theme inline {
   --font-display: "Bebas Neue", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
-  --shadow-glow: var(--shadow-glow);
-  --shadow-soft: var(--shadow-soft);
   --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
