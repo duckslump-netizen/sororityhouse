@@ -71,7 +71,7 @@ export const sendChatMessage = createServerFn({ method: "POST" })
         ? 2
         : 1;
 
-    if (requiredTier === 2 && tier > 0 && tier < 2) {
+    if (requiredTier === 2 && tier < 2) {
       return {
         error: "Her door is part of Full House. Upgrade to knock.",
         limited: true,
