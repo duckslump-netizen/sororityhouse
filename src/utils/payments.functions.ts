@@ -97,8 +97,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
         mode: "subscription",
-        success_url: `${data.returnUrl}?status=success`,
+        success_url: `${data.returnUrl}?status=success&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${data.returnUrl}?status=cancelled`,
+
         customer: customerId,
         metadata: { userId },
         subscription_data: { metadata: { userId } },
