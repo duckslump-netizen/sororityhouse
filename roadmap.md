@@ -7,6 +7,7 @@
 - [x] Expandable character system (src/lib/characters.ts): personality files + unlock conditions for all six girls, 12-door house with reserved doors
 - [x] Pivot: sorority house framing — new hero title/subtitle, Dakota + Zoe unlocked, Willow + Brittany blurred/locked, hallway section (2 doors open, 8 shut, fire sign)
 - [ ] Add Founders and Full House products, embedded checkout, and subscription lifecycle rules
+- [ ] Close audited gaps across authentication, account management, entitlements, renewals, plan changes, and preview payment testing
 
 ## Later
 - [ ] Free 100-message chat with each girl (needs Lovable Cloud + AI)
