@@ -123,6 +123,11 @@ function Index() {
             <button
               key={r.id}
               type="button"
+              onClick={() => {
+                if (!user) return void navigate({ to: "/auth" });
+                if (locked) return void navigate({ to: "/account" });
+                void navigate({ to: "/chat/$characterId", params: { characterId: r.id } });
+              }}
               className="group text-center"
             >
               <div className="relative overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
