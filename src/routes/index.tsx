@@ -245,13 +245,13 @@ function Index() {
       {/* Pricing */}
       <section className="mx-auto max-w-5xl px-6 py-24">
         <h2 className="text-center text-4xl sm:text-5xl">You get 100 messages. They get the last word.</h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-2">
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-border p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Trial</p>
             <p className="mt-4 font-display text-6xl">Free</p>
             <p className="mt-1 text-sm text-muted-foreground">Up to 100 messages, total.</p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>All four roommates unlocked</li>
+              <li>Dakota, Zoe, Willow &amp; Brittany unlocked</li>
               <li>No card required</li>
               <li>Live message counter</li>
             </ul>
@@ -265,11 +265,10 @@ function Index() {
               $9.99<span className="font-sans text-base text-muted-foreground">/mo</span>
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Founders price — locked in for life. Unlimited messages. Cancel anytime.
+              The first four girls. Founders price — locked in for life. Cancel anytime.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>Unlimited conversation with every girl in the house</li>
-
+              <li>Unlimited chat with Dakota, Zoe, Willow &amp; Brittany</li>
               <li>Memory of everything you've told them</li>
               <li>Deeper storylines as trust builds</li>
             </ul>
@@ -277,7 +276,25 @@ function Index() {
               Subscribe
             </Button>
           </div>
+          <div className="rounded-2xl border border-accent/50 bg-card p-8">
+            <p className="text-xs uppercase tracking-[0.3em] text-accent">Full house</p>
+            <p className="mt-4 font-display text-6xl">
+              $14.99<span className="font-sans text-base text-muted-foreground">/mo</span>
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              +$4.99 on top of founders when you unlock Sasha &amp; Piper.
+            </p>
+            <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+              <li>Everything in the founders plan</li>
+              <li>Sasha &amp; Piper unlocked behind their doors</li>
+              <li>Shared house conversations with all six</li>
+            </ul>
+            <Button variant="neon" size="lg" className="mt-8 w-full">
+              Unlock the full house
+            </Button>
+          </div>
         </div>
+
       </section>
 
       <footer className="border-t border-border">
