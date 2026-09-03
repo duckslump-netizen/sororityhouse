@@ -13,6 +13,8 @@ import {
   type AdminStats,
   type CharacterSetting,
 } from "@/utils/admin.functions";
+import { syncProductTaxCodes } from "@/utils/payments.functions";
+import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -62,6 +64,22 @@ function AdminPage() {
   const saveFn = useServerFn(saveCharacterSetting);
 
   const statsFn = useServerFn(getAdminStats);
+  const taxFn = useServerFn(syncProductTaxCodes);
+  const environment = usePaymentsEnvironment();
+
+  async function syncTaxCodes() {
+    if (!environment) return;
+    const result = await taxFn({ data: { environment } });
+    if ("error" in result) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success(
+      result.updated.length
+        ? `Tax codes set on: ${result.updated.join(", ")}`
+        : "No matching products found",
+    );
+  }
 
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [rows, setRows] = useState<CharacterSetting[]>([]);
