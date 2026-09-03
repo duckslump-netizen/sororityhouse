@@ -14,7 +14,7 @@ type SyncResult = { synced: boolean } | { error: string };
 
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
-  options: { email?: string; userId: string },
+  options: { email?: string | undefined; userId: string },
 ): Promise<string> {
   if (!/^[a-zA-Z0-9_-]+$/.test(options.userId)) throw new Error("Invalid userId");
 
