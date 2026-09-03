@@ -1,28 +1,17 @@
-import { useEffect, useState } from "react";
-import { getPaymentsEnvironment } from "@/utils/payments.functions";
-
 type StripeEnv = "sandbox" | "live";
 
-let cached: StripeEnv | null = null;
+const clientToken = import.meta.env["VITE_PAYMENTS_CLIENT_TOKEN"] as string | undefined;
+
+/**
+ * The publishable payment token tells us which environment this build talks to:
+ * pk_test_ = test mode, pk_live_ = real money. No server round-trip needed.
+ */
+export function getPaymentsEnvironment(): StripeEnv | null {
+  if (clientToken?.startsWith("pk_test_")) return "sandbox";
+  if (clientToken?.startsWith("pk_live_")) return "live";
+  return null;
+}
 
 export function usePaymentsEnvironment() {
-  const [environment, setEnvironment] = useState<StripeEnv | null>(cached);
-
-  useEffect(() => {
-    if (cached) return;
-    let active = true;
-    getPaymentsEnvironment()
-      .then((result) => {
-        cached = result.environment;
-        if (active) setEnvironment(result.environment);
-      })
-      .catch(() => {
-        if (active) setEnvironment("sandbox");
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  return environment;
+  return getPaymentsEnvironment();
 }
