@@ -6,44 +6,55 @@ import {
   getStripeErrorMessage,
 } from "@/lib/stripe.server";
 
-type CheckoutSessionResult = { clientSecret: string } | { error: string };
+type CheckoutSessionResult = { url: string } | { error: string };
 type PortalSessionResult = { url: string } | { error: string };
+
+/**
+ * Decides whether the app talks to the test or live payment environment.
+ * Live is only used once the live connection and its webhook secret exist.
+ */
+export const getPaymentsEnvironment = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ environment: StripeEnv }> => {
+    const liveReady =
+      !!process.env["STRIPE_LIVE_API_KEY"] &&
+      !!process.env["PAYMENTS_LIVE_WEBHOOK_SECRET"] &&
+      process.env["NODE_ENV"] === "production";
+    return { environment: liveReady ? "live" : "sandbox" };
+  },
+);
 
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
-  options: { email?: string; userId?: string },
+  options: { email?: string; userId: string },
 ): Promise<string> {
-  if (options.userId && !/^[a-zA-Z0-9_-]+$/.test(options.userId)) {
-    throw new Error("Invalid userId");
-  }
-  if (options.userId) {
-    const found = await stripe.customers.search({
-      query: `metadata['userId']:'${options.userId}'`,
-      limit: 1,
-    });
-    if (found.data.length && found.data[0]) return found.data[0].id;
-  }
+  if (!/^[a-zA-Z0-9_-]+$/.test(options.userId)) throw new Error("Invalid userId");
+
+  const found = await stripe.customers.search({
+    query: `metadata['userId']:'${options.userId}'`,
+    limit: 1,
+  });
+  if (found.data.length && found.data[0]) return found.data[0].id;
+
   if (options.email) {
     const existing = await stripe.customers.list({ email: options.email, limit: 1 });
     const customer = existing.data[0];
     if (customer) {
-      if (options.userId && customer.metadata?.["userId"] !== options.userId) {
-        await stripe.customers.update(customer.id, {
-          metadata: { ...customer.metadata, userId: options.userId },
-        });
-      }
+      await stripe.customers.update(customer.id, {
+        metadata: { ...customer.metadata, userId: options.userId },
+      });
       return customer.id;
     }
   }
+
   const created = await stripe.customers.create({
     ...(options.email && { email: options.email }),
-    ...(options.userId && { metadata: { userId: options.userId } }),
+    metadata: { userId: options.userId },
   });
   return created.id;
 }
 
 /**
- * Creates an embedded checkout session for a plan. Signed in only, so every
+ * Creates a hosted checkout session for a plan. Sign-in required, so every
  * purchase is tied to a real account and can drive entitlements.
  */
 export const createCheckoutSession = createServerFn({ method: "POST" })
@@ -55,8 +66,30 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
     },
   )
   .handler(async ({ data, context }): Promise<CheckoutSessionResult> => {
+    const { supabase, userId } = context;
+
+    // A member who already subscribes changes plans in the portal, not here.
+    const { data: existing } = await supabase
+      .from("subscriptions")
+      .select("status, current_period_end")
+      .eq("user_id", userId)
+      .eq("environment", data.environment)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (
+      existing &&
+      ["active", "trialing", "past_due"].includes(existing.status) &&
+      (!existing.current_period_end ||
+        new Date(existing.current_period_end) > new Date())
+    ) {
+      return {
+        error: "You already have an active plan. Use Manage billing to change it.",
+      };
+    }
+
     try {
-      const { supabase, userId } = context;
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -72,20 +105,18 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         userId,
       });
 
-      // Upgrades/downgrades on an existing subscription are handled in the
-      // billing portal, so checkout only runs for new subscriptions.
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
         mode: "subscription",
-        ui_mode: "embedded_page",
-        return_url: data.returnUrl,
+        success_url: `${data.returnUrl}?status=success`,
+        cancel_url: `${data.returnUrl}?status=cancelled`,
         customer: customerId,
         metadata: { userId },
         subscription_data: { metadata: { userId } },
-        managed_payments: { enabled: true },
-      } as any);
+      });
 
-      return { clientSecret: session.client_secret ?? "" };
+      if (!session.url) throw new Error("Checkout session has no URL");
+      return { url: session.url };
     } catch (error) {
       return { error: getStripeErrorMessage(error) };
     }
@@ -93,8 +124,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
 /**
  * Opens the billing portal where members change plan, update cards, or cancel.
- * Upgrades are prorated immediately; downgrades and cancellations take effect
- * at the end of the paid period.
+ * Upgrades apply immediately (prorated); downgrades and cancellations take
+ * effect at the end of the paid period.
  */
 export const createPortalSession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
