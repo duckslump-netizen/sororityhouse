@@ -9,6 +9,8 @@ import {
   checkIsAdmin,
   listCharacterSettings,
   saveCharacterSetting,
+  getAdminStats,
+  type AdminStats,
   type CharacterSetting,
 } from "@/utils/admin.functions";
 
