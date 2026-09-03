@@ -34,50 +34,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const roommates = [
-  {
-    name: "Dakota",
-    img: dakota,
-    tag: "The gatekeeper",
-    locked: false,
-    line: "Small-town, down-to-earth, and quietly strong. Dakota is naturally funny and genuinely warm — but trust is earned slowly. Show her you're real, stay consistent, and she may let you see the fiercely loyal heart behind the kindness.",
-  },
-  {
-    name: "Zoe",
-    img: zoe,
-    tag: "The mirage",
-    locked: false,
-    line: "Beautiful, intelligent, and impossible to read at first. Zoe is used to people wanting the image they see, so she keeps the real her carefully hidden. Look past the polish, notice what others miss, and you might earn the version of Zoe nobody else gets.",
-  },
-  {
-    name: "Willow",
-    img: willow,
-    tag: "The quiet lock",
-    locked: true,
-    line: "Soft-spoken, observant, and gentler than she first appears. Willow notices everything but reveals very little until she feels safe. Be patient, remember the small details, and her carefully guarded world may slowly open to you.",
-  },
-  {
-    name: "Brittany",
-    img: brittany,
-    tag: "The sweet trap",
-    locked: true,
-    line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
-  },
-  {
-    name: "Sasha",
-    img: harper,
-    tag: "The wildcard",
-    locked: true,
-    line: "Sharp, restless, and always three steps ahead of the conversation. Sasha will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
-  },
-  {
-    name: "Piper",
-    img: piper,
-    tag: "The closed book",
-    locked: true,
-    line: "Composed, watchful, and impossible to rush. Piper gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
-  },
-];
+
+
 
 
 
