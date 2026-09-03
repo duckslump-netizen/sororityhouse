@@ -59,8 +59,11 @@ function AdminPage() {
   const listFn = useServerFn(listCharacterSettings);
   const saveFn = useServerFn(saveCharacterSetting);
 
+  const statsFn = useServerFn(getAdminStats);
+
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [rows, setRows] = useState<CharacterSetting[]>([]);
+  const [stats, setStats] = useState<AdminStats | null>(null);
   const [draft, setDraft] = useState<CharacterSetting | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -74,12 +77,17 @@ function AdminPage() {
       try {
         const { isAdmin } = await isAdminFn({});
         setAllowed(isAdmin);
-        if (isAdmin) setRows(await listFn({}));
+        if (isAdmin) {
+          const [settings, s] = await Promise.all([listFn({}), statsFn({})]);
+          setRows(settings);
+          setStats(s);
+        }
       } catch {
         setAllowed(false);
       }
     })();
-  }, [user, isAdminFn, listFn]);
+  }, [user, isAdminFn, listFn, statsFn]);
+
 
   async function save() {
     if (!draft) return;
