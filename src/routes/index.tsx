@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Lock, DoorClosed } from "lucide-react";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
-import dakota from "@/assets/dakota.jpg";
-import zoe from "@/assets/zoe.jpg";
-import willow from "@/assets/willow.jpg";
-import brittany from "@/assets/brittany.jpg";
-import harper from "@/assets/harper.jpg";
-import piper from "@/assets/piper.jpg";
+import {
+  characters as roommates,
+  reservedDoors,
+  TOTAL_DOORS,
+  isOpen,
+  unlockLabel,
+} from "@/lib/characters";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,50 +34,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const roommates = [
-  {
-    name: "Dakota",
-    img: dakota,
-    tag: "The gatekeeper",
-    locked: false,
-    line: "Small-town, down-to-earth, and quietly strong. Dakota is naturally funny and genuinely warm — but trust is earned slowly. Show her you're real, stay consistent, and she may let you see the fiercely loyal heart behind the kindness.",
-  },
-  {
-    name: "Zoe",
-    img: zoe,
-    tag: "The mirage",
-    locked: false,
-    line: "Beautiful, intelligent, and impossible to read at first. Zoe is used to people wanting the image they see, so she keeps the real her carefully hidden. Look past the polish, notice what others miss, and you might earn the version of Zoe nobody else gets.",
-  },
-  {
-    name: "Willow",
-    img: willow,
-    tag: "The quiet lock",
-    locked: true,
-    line: "Soft-spoken, observant, and gentler than she first appears. Willow notices everything but reveals very little until she feels safe. Be patient, remember the small details, and her carefully guarded world may slowly open to you.",
-  },
-  {
-    name: "Brittany",
-    img: brittany,
-    tag: "The sweet trap",
-    locked: true,
-    line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
-  },
-  {
-    name: "Sasha",
-    img: harper,
-    tag: "The wildcard",
-    locked: true,
-    line: "Sharp, restless, and always three steps ahead of the conversation. Sasha will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
-  },
-  {
-    name: "Piper",
-    img: piper,
-    tag: "The closed book",
-    locked: true,
-    line: "Composed, watchful, and impossible to rush. Piper gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
-  },
-];
+
+
 
 
 
@@ -87,7 +47,9 @@ const steps = [
 ];
 
 function Index() {
+  const openCount = roommates.filter(isOpen).length;
   return (
+
     <main className="min-h-screen bg-background text-foreground">
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
@@ -121,28 +83,30 @@ function Index() {
       <section className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-center text-4xl sm:text-5xl">Pick your girl</h2>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {roommates.map((r) => (
+          {roommates.map((r) => {
+            const locked = !isOpen(r);
+            return (
             <button
-              key={r.name}
+              key={r.id}
               type="button"
               className="group text-center"
             >
               <div className="relative overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
                 <img
                   src={r.img}
-                  alt={r.locked ? `Locked door for ${r.name}` : `Portrait of ${r.name}`}
+                  alt={locked ? `Locked door for ${r.name}` : `Portrait of ${r.name}`}
                   loading="lazy"
                   width={768}
                   height={960}
                   className={`h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-                    r.locked ? "scale-105 blur-lg brightness-75" : ""
+                    locked ? "scale-105 blur-lg brightness-75" : ""
                   }`}
                 />
-                {r.locked && (
+                {locked && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/40">
                     <Lock className="h-7 w-7 text-accent" aria-hidden="true" />
                     <span className="text-[0.6rem] uppercase tracking-[0.3em] text-accent">
-                      Door still shut
+                      {unlockLabel(r.unlock)}
                     </span>
                   </div>
                 )}
@@ -151,7 +115,9 @@ function Index() {
               <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.line}</p>
             </button>
-          ))}
+            );
+          })}
+
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
           Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
@@ -179,18 +145,57 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-veil" />
-        <div className="relative mx-auto max-w-3xl px-6 py-28 text-center">
+        <div className="relative mx-auto max-w-4xl px-6 py-28 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">
-            Two doors open. Eight shut.
+            {openCount} {openCount === 1 ? "door" : "doors"} open. {TOTAL_DOORS - openCount} shut.
           </p>
           <h2 className="mt-5 text-4xl leading-tight sm:text-5xl">
             Are you charming enough to get through everyone — or will you have to{" "}
             <span className="text-gradient-neon">go back to school?</span>
           </h2>
-          <p className="mt-6 text-sm text-muted-foreground">
-            The fire exit is always right there at the end of the hall.
+
+          {/* The hall of doors — extras are reserved for future sorority members */}
+          <div className="mt-12 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+            {roommates.map((r) => (
+              <div
+                key={r.id}
+                className={`glass-card flex aspect-[2/3] flex-col items-center justify-center gap-2 rounded-xl px-2 ${
+                  isOpen(r) ? "border-primary/60 shadow-glow" : ""
+                }`}
+              >
+                {isOpen(r) ? (
+                  <DoorClosed className="h-6 w-6 text-primary" aria-hidden="true" />
+                ) : (
+                  <Lock className="h-5 w-5 text-accent" aria-hidden="true" />
+                )}
+                <span className="text-lg leading-none">{r.name}</span>
+                <span className="text-[0.5rem] uppercase tracking-[0.25em] text-muted-foreground">
+                  {unlockLabel(r.unlock)}
+                </span>
+              </div>
+            ))}
+            {reservedDoors.map((d) => (
+              <div
+                key={d.id}
+                className="flex aspect-[2/3] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border/70 px-2 opacity-60"
+              >
+                <DoorClosed className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+                <span className="font-display text-lg leading-none text-muted-foreground">
+                  {d.number}
+                </span>
+                <span className="text-[0.5rem] uppercase tracking-[0.25em] text-muted-foreground">
+                  Reserved
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-sm text-muted-foreground">
+            {TOTAL_DOORS} doors in the house. Six are hers. The rest are waiting on new sisters —
+            and the fire exit is always right there at the end of the hall.
           </p>
         </div>
+
       </section>
 
 
