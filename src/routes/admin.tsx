@@ -133,11 +133,16 @@ function AdminPage() {
             Plans, personality prompts and unlock rules — changes go live instantly.
           </p>
         </div>
-        <Link to="/">
-          <Button variant="outline" size="sm">
-            The house
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => void syncTaxCodes()}>
+            Sync tax codes
           </Button>
-        </Link>
+          <Link to="/">
+            <Button variant="outline" size="sm">
+              The house
+            </Button>
+          </Link>
+        </div>
       </header>
 
       {stats && (
