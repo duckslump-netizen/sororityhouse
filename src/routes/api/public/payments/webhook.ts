@@ -62,7 +62,7 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
 async function markCanceled(subscription: any, env: StripeEnv) {
   await getSupabase()
     .from("subscriptions")
-    .update({ status: "canceled", updated_at: new Date().toISOString() })
+    .update({ status: "canceled", updated_at: new Date().toISOString() } as never)
     .eq("stripe_subscription_id", subscription.id)
     .eq("environment", env);
 }
