@@ -49,14 +49,35 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       ["active", "trialing", "past_due", "canceled"].includes(sub.status);
     const tier = active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
 
-    if (FULL_HOUSE_ONLY.includes(data.characterId) && tier < 2) {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // Admin-managed config decides which plan each door belongs to and
+    // whether her personality prompt is overridden.
+    const { data: setting } = await supabaseAdmin
+      .from("character_settings")
+      .select("price_id, enabled, system_prompt")
+      .eq("character_id", data.characterId)
+      .maybeSingle();
+
+    if (setting && setting.enabled === false) {
+      return { error: "That door is closed right now.", limited: true };
+    }
+
+    const requiredTier = setting
+      ? setting.price_id === "full_house_monthly"
+        ? 2
+        : 1
+      : FULL_HOUSE_ONLY.includes(data.characterId)
+        ? 2
+        : 1;
+
+    if (requiredTier === 2 && tier > 0 && tier < 2) {
       return {
         error: "Her door is part of Full House. Upgrade to knock.",
         limited: true,
       };
     }
 
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     let messagesUsed: number | null = null;
     if (tier === 0) {
