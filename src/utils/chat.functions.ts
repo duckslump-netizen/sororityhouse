@@ -117,7 +117,11 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       body: JSON.stringify({
         model: "google/gemini-3.7-flash",
         messages: [
-          { role: "system", content: buildCharacterPrompt(data.characterId) },
+          {
+            role: "system",
+            content: setting?.system_prompt || buildCharacterPrompt(data.characterId),
+          },
+
           ...priorTurns,
           { role: "user", content: data.content },
         ],
