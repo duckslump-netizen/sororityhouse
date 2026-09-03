@@ -62,18 +62,18 @@ const roommates = [
     line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
   },
   {
-    name: "Harper",
+    name: "Sasha",
     img: harper,
     tag: "The wildcard",
     locked: true,
-    line: "Sharp, restless, and always three steps ahead of the conversation. Harper will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
+    line: "Sharp, restless, and always three steps ahead of the conversation. Sasha will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
   },
   {
-    name: "Sienna",
+    name: "Piper",
     img: sienna,
     tag: "The closed book",
     locked: true,
-    line: "Composed, watchful, and impossible to rush. Sienna gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
+    line: "Composed, watchful, and impossible to rush. Piper gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
   },
 ];
 
@@ -155,7 +155,7 @@ function Index() {
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
           Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
-          two open doors. Willow, Brittany, Harper and Sienna stay behind theirs until you prove
+          two open doors. Willow, Brittany, Sasha and Piper stay behind theirs until you prove
           you're worth it.
         </p>
         <div className="mt-6 flex justify-center">
