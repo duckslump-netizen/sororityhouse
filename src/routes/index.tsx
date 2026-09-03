@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Lock, DoorClosed } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useCheckout } from "@/hooks/useCheckout";
+import { PLANS } from "@/lib/stripe";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
 import {
@@ -48,9 +52,39 @@ const steps = [
 
 function Index() {
   const openCount = roommates.filter(isOpen).length;
+  const { user } = useAuth();
+  const { isActive } = useSubscription();
+  const { openCheckout, openBillingPortal, pending } = useCheckout();
+  const navigate = useNavigate();
+
+  function startTrial() {
+    void navigate({ to: user ? "/account" : "/auth" });
+  }
+
+  function subscribe(priceId: string) {
+    if (!user) {
+      void navigate({ to: "/auth" });
+      return;
+    }
+    if (isActive) {
+      void openBillingPortal();
+      return;
+    }
+    void openCheckout(priceId);
+  }
+
   return (
 
+
     <main className="min-h-screen bg-background text-foreground">
+      <nav className="absolute inset-x-0 top-0 z-20 flex justify-end px-6 py-5">
+        <Link
+          to={user ? "/account" : "/auth"}
+          className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
+        >
+          {user ? "My account" : "Sign in"}
+        </Link>
+      </nav>
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
         <img
@@ -124,9 +158,9 @@ function Index() {
           two open doors. Willow, Brittany, Sasha and Piper stay behind theirs until you prove
           you're worth it.
         </p>
-        <div className="mt-6 flex justify-center">
-          <Button variant="hero" size="lg">
-            Start free — 100 messages
+        <div className="mt-6 flex justify-center gap-3">
+          <Button variant="hero" size="lg" onClick={startTrial}>
+            {user ? "Go to my account" : "Start free — 100 messages"}
           </Button>
         </div>
         <p className="mt-4 text-center text-xs text-muted-foreground">
@@ -255,7 +289,7 @@ function Index() {
               <li>No card required</li>
               <li>Live message counter</li>
             </ul>
-            <Button variant="neon" size="lg" className="mt-8 w-full">
+            <Button variant="neon" size="lg" className="mt-8 w-full" onClick={startTrial}>
               Start the trial
             </Button>
           </div>
@@ -272,8 +306,14 @@ function Index() {
               <li>Memory of everything you've told them</li>
               <li>Deeper storylines as trust builds</li>
             </ul>
-            <Button variant="hero" size="lg" className="mt-8 w-full">
-              Subscribe
+            <Button
+              variant="hero"
+              size="lg"
+              className="mt-8 w-full"
+              disabled={!!pending}
+              onClick={() => subscribe(PLANS.founders_monthly.priceId)}
+            >
+              {pending === PLANS.founders_monthly.priceId ? "Opening checkout…" : "Subscribe"}
             </Button>
           </div>
           <div className="rounded-2xl border border-accent/50 bg-card p-8">
@@ -289,8 +329,16 @@ function Index() {
               <li>Sasha &amp; Piper unlocked behind their doors</li>
               <li>Shared house conversations with all six</li>
             </ul>
-            <Button variant="neon" size="lg" className="mt-8 w-full">
-              Unlock the full house
+            <Button
+              variant="neon"
+              size="lg"
+              className="mt-8 w-full"
+              disabled={!!pending}
+              onClick={() => subscribe(PLANS.full_house_monthly.priceId)}
+            >
+              {pending === PLANS.full_house_monthly.priceId
+                ? "Opening checkout…"
+                : "Unlock the full house"}
             </Button>
           </div>
         </div>
