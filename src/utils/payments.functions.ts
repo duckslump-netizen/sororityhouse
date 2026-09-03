@@ -9,19 +9,8 @@ import {
 type CheckoutSessionResult = { url: string } | { error: string };
 type PortalSessionResult = { url: string } | { error: string };
 
-/**
- * Decides whether the app talks to the test or live payment environment.
- * Live is only used once the live connection and its webhook secret exist.
- */
-export const getPaymentsEnvironment = createServerFn({ method: "GET" }).handler(
-  async (): Promise<{ environment: StripeEnv }> => {
-    const liveReady =
-      !!process.env["STRIPE_LIVE_API_KEY"] &&
-      !!process.env["PAYMENTS_LIVE_WEBHOOK_SECRET"] &&
-      process.env["NODE_ENV"] === "production";
-    return { environment: liveReady ? "live" : "sandbox" };
-  },
-);
+type SyncResult = { synced: boolean } | { error: string };
+
 
 async function resolveOrCreateCustomer(
   stripe: ReturnType<typeof createStripeClient>,
