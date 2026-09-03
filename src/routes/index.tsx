@@ -155,7 +155,8 @@ function Index() {
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
           Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
-          two open doors. Willow and Brittany stay behind theirs until you prove you're worth it.
+          two open doors. Willow, Brittany, Harper and Sienna stay behind theirs until you prove
+          you're worth it.
         </p>
         <div className="mt-6 flex justify-center">
           <Button variant="hero" size="lg">
