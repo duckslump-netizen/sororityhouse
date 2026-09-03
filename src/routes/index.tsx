@@ -139,7 +139,7 @@ function Index() {
 
       {/* Pricing */}
       <section className="mx-auto max-w-5xl px-6 py-24">
-        <h2 className="text-center text-4xl sm:text-5xl">100 free messages. Prove you can get through.</h2>
+        <h2 className="text-center text-4xl sm:text-5xl">You get 100 messages. They get the last word.</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           <div className="rounded-2xl border border-border p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Trial</p>
