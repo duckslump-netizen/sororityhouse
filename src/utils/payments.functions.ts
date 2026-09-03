@@ -147,3 +147,64 @@ export const createPortalSession = createServerFn({ method: "POST" })
       return { error: getStripeErrorMessage(error) };
     }
   });
+
+/**
+ * Reconciles the membership row straight from the checkout session.
+ * The webhook is the primary path; this covers the moments right after
+ * payment (and preview builds where webhook delivery lags) so the member
+ * never lands on the account page without their key.
+ */
+export const syncCheckoutSession = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { sessionId: string; environment: StripeEnv }) => {
+    if (!/^cs_[a-zA-Z0-9_]+$/.test(data.sessionId)) throw new Error("Invalid sessionId");
+    return data;
+  })
+  .handler(async ({ data, context }): Promise<SyncResult> => {
+    const { userId } = context;
+    try {
+      const stripe = createStripeClient(data.environment);
+      const session = await stripe.checkout.sessions.retrieve(data.sessionId, {
+        expand: ["subscription.items.data.price"],
+      });
+
+      if (session.metadata?.["userId"] !== userId) return { error: "Session mismatch" };
+      const subscription = session.subscription;
+      if (!subscription || typeof subscription === "string") return { synced: false };
+
+      const item = subscription.items.data[0];
+      if (!item) return { synced: false };
+
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      await supabaseAdmin.from("subscriptions").upsert(
+        {
+          user_id: userId,
+          stripe_subscription_id: subscription.id,
+          stripe_customer_id:
+            typeof subscription.customer === "string"
+              ? subscription.customer
+              : subscription.customer.id,
+          product_id:
+            typeof item.price.product === "string"
+              ? item.price.product
+              : item.price.product.id,
+          price_id: item.price.lookup_key ?? item.price.id,
+          status: subscription.status,
+          current_period_start: item.current_period_start
+            ? new Date(item.current_period_start * 1000).toISOString()
+            : null,
+          current_period_end: item.current_period_end
+            ? new Date(item.current_period_end * 1000).toISOString()
+            : null,
+          cancel_at_period_end: subscription.cancel_at_period_end ?? false,
+          environment: data.environment,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "stripe_subscription_id" },
+      );
+
+      return { synced: true };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
