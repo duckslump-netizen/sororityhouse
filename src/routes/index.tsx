@@ -33,27 +33,28 @@ const roommates = [
     name: "Dakota",
     img: dakota,
     tag: "The gatekeeper",
-    line: "Warm on the outside, but trust must be earned.",
+    line: "Small-town, down-to-earth, and quietly strong. Dakota is naturally funny and genuinely warm — but trust is earned slowly. Show her you're real, stay consistent, and she may let you see the fiercely loyal heart behind the kindness.",
   },
   {
     name: "Zoe",
     img: zoe,
     tag: "The mirage",
-    line: "Everyone sees her, but almost nobody gets past the image.",
+    line: "Beautiful, intelligent, and impossible to read at first. Zoe is used to people wanting the image they see, so she keeps the real her carefully hidden. Look past the polish, notice what others miss, and you might earn the version of Zoe nobody else gets.",
   },
   {
     name: "Willow",
     img: willow,
     tag: "The quiet lock",
-    line: "Gentle and observant, but she opens only with patience.",
+    line: "Soft-spoken, observant, and gentler than she first appears. Willow notices everything but reveals very little until she feels safe. Be patient, remember the small details, and her carefully guarded world may slowly open to you.",
   },
   {
     name: "Brittany",
     img: brittany,
     tag: "The sweet trap",
-    line: "Seems like the easiest — her friendliness is the hardest wall.",
+    line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
   },
 ];
+
 
 
 const steps = [
