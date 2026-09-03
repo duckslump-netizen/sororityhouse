@@ -4,6 +4,8 @@ import willowImg from "@/assets/willow.jpg";
 import brittanyImg from "@/assets/brittany.jpg";
 import sashaImg from "@/assets/harper.jpg";
 import piperImg from "@/assets/piper.jpg";
+import { buildCharacterPrompt, personalityFiles } from "./personalities";
+
 
 /**
  * Source of truth for every girl in the sorority house.
