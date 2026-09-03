@@ -77,8 +77,15 @@ function Index() {
         <div className="relative mx-auto flex min-h-[70vh] max-w-5xl flex-col items-center justify-center px-6 pb-16 pt-28 text-center">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">A social experiment</p>
           <h1 className="mt-5 text-6xl leading-[0.92] sm:text-8xl">
-            Can you <span className="text-gradient-neon">get through?</span>
+            Can you <span className="text-gradient-neon">get through them all?</span>
           </h1>
+          <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
+            Think you're a Casanova? I doubt it.
+          </p>
+          <p className="mt-2 text-lg text-foreground sm:text-xl">
+            No one's made it past two so far.
+          </p>
+
         </div>
       </section>
 
