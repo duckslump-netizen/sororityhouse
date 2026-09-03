@@ -13,6 +13,8 @@ import {
   type AdminStats,
   type CharacterSetting,
 } from "@/utils/admin.functions";
+import { syncProductTaxCodes } from "@/utils/payments.functions";
+import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
 
 export const Route = createFileRoute("/admin")({
   ssr: false,
@@ -62,6 +64,22 @@ function AdminPage() {
   const saveFn = useServerFn(saveCharacterSetting);
 
   const statsFn = useServerFn(getAdminStats);
+  const taxFn = useServerFn(syncProductTaxCodes);
+  const environment = usePaymentsEnvironment();
+
+  async function syncTaxCodes() {
+    if (!environment) return;
+    const result = await taxFn({ data: { environment } });
+    if ("error" in result) {
+      toast.error(result.error);
+      return;
+    }
+    toast.success(
+      result.updated.length
+        ? `Tax codes set on: ${result.updated.join(", ")}`
+        : "No matching products found",
+    );
+  }
 
   const [allowed, setAllowed] = useState<boolean | null>(null);
   const [rows, setRows] = useState<CharacterSetting[]>([]);
@@ -133,11 +151,16 @@ function AdminPage() {
             Plans, personality prompts and unlock rules — changes go live instantly.
           </p>
         </div>
-        <Link to="/">
-          <Button variant="outline" size="sm">
-            The house
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => void syncTaxCodes()}>
+            Sync tax codes
           </Button>
-        </Link>
+          <Link to="/">
+            <Button variant="outline" size="sm">
+              The house
+            </Button>
+          </Link>
+        </div>
       </header>
 
       {stats && (

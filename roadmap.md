@@ -8,7 +8,8 @@
 
 ## Now
 - [ ] Stripe live mode: user must finish go-live in the Payments tab (live keys/webhook are provisioned automatically after that)
-- [ ] Close audited payment lifecycle gaps: tax handling, test-mode notice, upgrade flow, failed-renewal UX, and end-to-end preview verification
+- [x] Payment gap fixes: Stripe tax/compliance on checkout, product tax codes (admin sync), site-wide test-mode notice, free-message counter everywhere, past-due grace banner
+- [ ] Stripe go-live form + live end-to-end verification (user action in Payments tab)
 
 ## Later
 - [ ] Trust levels driving unlocks + real scoreboard data

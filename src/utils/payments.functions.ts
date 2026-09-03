@@ -1,3 +1,4 @@
+import type Stripe from "stripe";
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
@@ -95,6 +96,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       });
 
 
+      // Digital memberships sold from a US account: Stripe handles tax
+      // calculation, collection, filing and remittance for buyers in the
+      // supported countries, plus fraud, disputes and receipt emails.
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
         mode: "subscription",
@@ -102,9 +106,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         cancel_url: `${data.returnUrl}?status=cancelled`,
 
         customer: customerId,
-        metadata: { userId },
+        managed_payments: { enabled: true },
+        metadata: { userId, managed_payments: "true" },
         subscription_data: { metadata: { userId } },
-      });
+      } as Stripe.Checkout.SessionCreateParams);
 
       if (!session.url) throw new Error("Checkout session has no URL");
       return { url: session.url };
@@ -205,6 +210,41 @@ export const syncCheckoutSession = createServerFn({ method: "POST" })
       );
 
       return { synced: true };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
+
+/** Stripe tax codes per product so tax is classified correctly. */
+const PRODUCT_TAX_CODES: Record<string, string> = {
+  founders_plan: "txcd_10103001",
+  full_house_plan: "txcd_10103001",
+};
+
+/**
+ * Admin-only, run once per environment: stamps each membership product with
+ * its tax code so Stripe can classify and calculate tax on checkout.
+ */
+export const syncProductTaxCodes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { environment: StripeEnv }) => data)
+  .handler(async ({ data, context }): Promise<{ updated: string[] } | { error: string }> => {
+    const { isAdminUser } = await import("@/lib/roles.server");
+    if (!(await isAdminUser(context.userId))) return { error: "Forbidden" };
+
+    try {
+      const stripe = createStripeClient(data.environment);
+      const updated: string[] = [];
+      for (const [lookupKey, taxCode] of Object.entries(PRODUCT_TAX_CODES)) {
+        const products = await stripe.products.list({ limit: 100 });
+        const product = products.data.find(
+          (p) => p.id === lookupKey || p.metadata?.["lovable_external_id"] === lookupKey,
+        );
+        if (!product) continue;
+        await stripe.products.update(product.id, { tax_code: taxCode });
+        updated.push(lookupKey);
+      }
+      return { updated };
     } catch (error) {
       return { error: getStripeErrorMessage(error) };
     }
