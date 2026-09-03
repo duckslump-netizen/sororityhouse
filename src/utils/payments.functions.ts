@@ -95,6 +95,9 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       });
 
 
+      // Digital memberships sold from a US account: Stripe handles tax
+      // calculation, collection, filing and remittance for buyers in the
+      // supported countries, plus fraud, disputes and receipt emails.
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
         mode: "subscription",
@@ -102,9 +105,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         cancel_url: `${data.returnUrl}?status=cancelled`,
 
         customer: customerId,
-        metadata: { userId },
+        managed_payments: { enabled: true },
+        metadata: { userId, managed_payments: "true" },
         subscription_data: { metadata: { userId } },
-      });
+      } as Stripe.Checkout.SessionCreateParams);
 
       if (!session.url) throw new Error("Checkout session has no URL");
       return { url: session.url };
