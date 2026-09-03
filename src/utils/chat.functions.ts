@@ -48,10 +48,8 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       periodOk &&
       ["active", "trialing", "past_due", "canceled"].includes(sub.status);
     // Owner/admin accounts can test every door for free, always.
-    const { data: isAdmin } = await supabase.rpc("has_role", {
-      _user_id: userId,
-      _role: "admin",
-    });
+    const { isAdminUser } = await import("@/lib/roles.server");
+    const isAdmin = await isAdminUser(userId);
     const tier = isAdmin === true ? 2 : active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
