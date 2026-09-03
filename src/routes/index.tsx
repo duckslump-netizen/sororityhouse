@@ -33,27 +33,28 @@ const roommates = [
     name: "Dakota",
     img: dakota,
     tag: "The gatekeeper",
-    line: "Reads you in three messages. Decides in four.",
+    line: "Warm on the outside, but trust must be earned.",
   },
   {
     name: "Zoe",
     img: zoe,
-    tag: "The skeptic",
-    line: "Sarcasm is the wall. Something softer is behind it.",
+    tag: "The mirage",
+    line: "Everyone sees her, but almost nobody gets past the image.",
   },
   {
     name: "Willow",
     img: willow,
-    tag: "The warm one",
-    line: "Friendly with everyone. Open with almost no one.",
+    tag: "The quiet lock",
+    line: "Gentle and observant, but she opens only with patience.",
   },
   {
     name: "Brittany",
     img: brittany,
-    tag: "The vault",
-    line: "Says a lot. Tells you nothing. Good luck.",
+    tag: "The sweet trap",
+    line: "Seems like the easiest — her friendliness is the hardest wall.",
   },
 ];
+
 
 const steps = [
   { n: "01", t: "Pick a roommate", d: "Four personalities, four very different sets of walls." },
