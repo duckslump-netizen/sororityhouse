@@ -81,28 +81,30 @@ function Index() {
       <section className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-center text-4xl sm:text-5xl">Pick your girl</h2>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {roommates.map((r) => (
+          {roommates.map((r) => {
+            const locked = !isOpen(r);
+            return (
             <button
-              key={r.name}
+              key={r.id}
               type="button"
               className="group text-center"
             >
               <div className="relative overflow-hidden rounded-2xl border border-border shadow-soft transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-glow">
                 <img
                   src={r.img}
-                  alt={r.locked ? `Locked door for ${r.name}` : `Portrait of ${r.name}`}
+                  alt={locked ? `Locked door for ${r.name}` : `Portrait of ${r.name}`}
                   loading="lazy"
                   width={768}
                   height={960}
                   className={`h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-                    r.locked ? "scale-105 blur-lg brightness-75" : ""
+                    locked ? "scale-105 blur-lg brightness-75" : ""
                   }`}
                 />
-                {r.locked && (
+                {locked && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/40">
                     <Lock className="h-7 w-7 text-accent" aria-hidden="true" />
                     <span className="text-[0.6rem] uppercase tracking-[0.3em] text-accent">
-                      Door still shut
+                      {unlockLabel(r.unlock)}
                     </span>
                   </div>
                 )}
@@ -111,7 +113,9 @@ function Index() {
               <p className="text-[0.65rem] uppercase tracking-[0.3em] text-accent">{r.tag}</p>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{r.line}</p>
             </button>
-          ))}
+            );
+          })}
+
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
           Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
