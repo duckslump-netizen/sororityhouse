@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 import heroLoft from "@/assets/hero-loft.jpg";
+import hallway from "@/assets/hallway.jpg";
 import dakota from "@/assets/dakota.jpg";
 import zoe from "@/assets/zoe.jpg";
 import willow from "@/assets/willow.jpg";
@@ -9,17 +11,17 @@ import brittany from "@/assets/brittany.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Apartment 4 — Can You Get Past Their Defenses?" },
+      { title: "Welcome to the Sorority House — Can You Survive or Thrive?" },
       {
         name: "description",
         content:
-          "Four roommates. One social experiment. Chat free for 100 messages and see if you can get past Dakota, Zoe, Willow and Brittany's personal defenses.",
+          "Ten doors, two open. Chat free for 100 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
       },
-      { property: "og:title", content: "Apartment 4 — Can You Get Past Their Defenses?" },
+      { property: "og:title", content: "Welcome to the Sorority House" },
       {
         property: "og:description",
         content:
-          "A conversation experiment with four roommates. 100 free messages, then subscribe to keep talking.",
+          "Can you survive or will you thrive? 100 free messages, then subscribe to keep talking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -33,27 +35,32 @@ const roommates = [
     name: "Dakota",
     img: dakota,
     tag: "The gatekeeper",
+    locked: false,
     line: "Small-town, down-to-earth, and quietly strong. Dakota is naturally funny and genuinely warm — but trust is earned slowly. Show her you're real, stay consistent, and she may let you see the fiercely loyal heart behind the kindness.",
   },
   {
     name: "Zoe",
     img: zoe,
     tag: "The mirage",
+    locked: false,
     line: "Beautiful, intelligent, and impossible to read at first. Zoe is used to people wanting the image they see, so she keeps the real her carefully hidden. Look past the polish, notice what others miss, and you might earn the version of Zoe nobody else gets.",
   },
   {
     name: "Willow",
     img: willow,
     tag: "The quiet lock",
+    locked: true,
     line: "Soft-spoken, observant, and gentler than she first appears. Willow notices everything but reveals very little until she feels safe. Be patient, remember the small details, and her carefully guarded world may slowly open to you.",
   },
   {
     name: "Brittany",
     img: brittany,
     tag: "The sweet trap",
+    locked: true,
     line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
   },
 ];
+
 
 
 
