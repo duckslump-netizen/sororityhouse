@@ -77,21 +77,22 @@ function Index() {
         <div className="relative mx-auto flex min-h-[92vh] max-w-5xl flex-col justify-end px-6 pb-20 pt-28">
           <p className="text-xs uppercase tracking-[0.35em] text-accent">A social experiment</p>
           <h1 className="mt-5 text-6xl leading-[0.92] sm:text-8xl">
-            Can you get through
+            Can you
             <br />
-            <span className="text-gradient-neon">their personal defenses?</span>
+            <span className="text-gradient-neon">get through?</span>
           </h1>
           <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Four roommates share one apartment and a whole lot of emotional armor. Talk to Dakota,
-            Zoe, Willow and Brittany — and find out how far honesty actually gets you.
+            Four roommates share one apartment and a whole lot of emotional armor. Pick your girl —
+            Dakota, Zoe, Willow or Brittany — and find out how far honesty actually gets you.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Button variant="hero" size="xl">
-              Start free — 100 messages
+              Pick your girl
             </Button>
             <Button variant="neon" size="xl">
               See the pricing
             </Button>
+
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             No card required. The trial ends at message 100.
