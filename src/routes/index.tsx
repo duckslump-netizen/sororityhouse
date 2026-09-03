@@ -260,13 +260,16 @@ function Index() {
             </Button>
           </div>
           <div className="relative rounded-2xl border border-primary/50 bg-card p-8 shadow-glow">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">Full access</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent">Founders discount</p>
             <p className="mt-4 font-display text-6xl">
-              $19<span className="font-sans text-base text-muted-foreground">/mo</span>
+              $9.99<span className="font-sans text-base text-muted-foreground">/mo</span>
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">Unlimited messages. Cancel anytime.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Founders price — locked in for life. Unlimited messages. Cancel anytime.
+            </p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>Unlimited conversation with all four</li>
+              <li>Unlimited conversation with every girl in the house</li>
+
               <li>Memory of everything you've told them</li>
               <li>Deeper storylines as trust builds</li>
             </ul>
