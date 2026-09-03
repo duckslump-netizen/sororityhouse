@@ -259,6 +259,16 @@ export const reservedDoors: ReservedDoor[] = Array.from(
 
 export const isOpen = (c: CharacterProfile) => c.unlock.type === "open";
 
+/**
+ * The uploaded markdown personality file for a girl — the source of truth for
+ * her chats and for shared house conversations.
+ */
+export const personalityFileFor = (c: CharacterProfile) => personalityFiles[c.id];
+
+/** Ready-to-use system prompt for a one-on-one chat with this girl. */
+export const promptFor = (c: CharacterProfile) => buildCharacterPrompt(c.id);
+
+
 export function unlockLabel(unlock: UnlockCondition): string {
   switch (unlock.type) {
     case "open":
