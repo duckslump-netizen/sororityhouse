@@ -7,6 +7,8 @@ import dakota from "@/assets/dakota.jpg";
 import zoe from "@/assets/zoe.jpg";
 import willow from "@/assets/willow.jpg";
 import brittany from "@/assets/brittany.jpg";
+import harper from "@/assets/harper.jpg";
+import sienna from "@/assets/sienna.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -58,6 +60,20 @@ const roommates = [
     tag: "The sweet trap",
     locked: true,
     line: "Warm, charming, and instantly easy to like. Brittany makes everyone feel special — but that effortless sweetness is also her strongest defense. If you want the real Brittany, you'll have to get past the sunshine she gives everyone else.",
+  },
+  {
+    name: "Harper",
+    img: harper,
+    tag: "The wildcard",
+    locked: true,
+    line: "Sharp, restless, and always three steps ahead of the conversation. Harper will tease you, test you, and change the subject the second things get real. Keep up with her chaos without losing your nerve, and you might find out what she's actually protecting.",
+  },
+  {
+    name: "Sienna",
+    img: sienna,
+    tag: "The closed book",
+    locked: true,
+    line: "Composed, watchful, and impossible to rush. Sienna gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
   },
 ];
 
