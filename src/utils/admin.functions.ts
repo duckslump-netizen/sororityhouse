@@ -82,3 +82,99 @@ export const saveCharacterSetting = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export interface AdminStats {
+  members: number;
+  plans: { priceId: string; name: string; price: string; count: number }[];
+  freeMembers: number;
+  cancelling: number;
+  pastDue: number;
+  mrr: number;
+  messagesTotal: number;
+  messages24h: number;
+  activeChats7d: number;
+  activeMembers7d: number;
+  perCharacter: { characterId: string; messages: number; chatters: number }[];
+}
+
+/** Headline numbers for the house: plan mix and chat activity. */
+export const getAdminStats = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }): Promise<AdminStats> => {
+    await assertAdmin(context as never);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { PLANS } = await import("@/lib/stripe");
+
+    const since7d = new Date(Date.now() - 7 * 864e5).toISOString();
+    const since24h = new Date(Date.now() - 864e5).toISOString();
+
+    const [membersRes, subsRes, msgTotalRes, msg24hRes, recentRes] = await Promise.all([
+      supabaseAdmin.from("profiles").select("id", { count: "exact", head: true }),
+      supabaseAdmin
+        .from("subscriptions")
+        .select("user_id, price_id, status, current_period_end, cancel_at_period_end"),
+      supabaseAdmin.from("messages").select("id", { count: "exact", head: true }),
+      supabaseAdmin
+        .from("messages")
+        .select("id", { count: "exact", head: true })
+        .gte("created_at", since24h),
+      supabaseAdmin
+        .from("messages")
+        .select("user_id, character_id")
+        .gte("created_at", since7d)
+        .limit(20000),
+    ]);
+
+    const now = Date.now();
+    const activeSubs = (subsRes.data ?? []).filter((s) => {
+      const periodOk = !s.current_period_end || new Date(s.current_period_end).getTime() > now;
+      return periodOk && ["active", "trialing", "past_due", "canceled"].includes(s.status);
+    });
+
+    const plans = Object.values(PLANS).map((p) => ({
+      priceId: p.priceId,
+      name: p.name,
+      price: p.price,
+      count: activeSubs.filter((s) => s.price_id === p.priceId).length,
+    }));
+
+    const mrr = plans.reduce(
+      (sum, p) => sum + p.count * Number(p.price.replace(/[^0-9.]/g, "")),
+      0,
+    );
+
+    const members = membersRes.count ?? 0;
+    const payingUsers = new Set(activeSubs.map((s) => s.user_id)).size;
+
+    const recent = recentRes.data ?? [];
+    const chatKeys = new Set(recent.map((m) => `${m.user_id}:${m.character_id}`));
+    const chatters = new Set(recent.map((m) => m.user_id));
+
+    const byCharacter = new Map<string, { messages: number; chatters: Set<string> }>();
+    for (const m of recent) {
+      const entry = byCharacter.get(m.character_id) ?? { messages: 0, chatters: new Set<string>() };
+      entry.messages += 1;
+      entry.chatters.add(m.user_id);
+      byCharacter.set(m.character_id, entry);
+    }
+
+    return {
+      members,
+      plans,
+      freeMembers: Math.max(members - payingUsers, 0),
+      cancelling: activeSubs.filter((s) => s.cancel_at_period_end || s.status === "canceled").length,
+      pastDue: activeSubs.filter((s) => s.status === "past_due").length,
+      mrr: Math.round(mrr * 100) / 100,
+      messagesTotal: msgTotalRes.count ?? 0,
+      messages24h: msg24hRes.count ?? 0,
+      activeChats7d: chatKeys.size,
+      activeMembers7d: chatters.size,
+      perCharacter: [...byCharacter.entries()]
+        .map(([characterId, v]) => ({
+          characterId,
+          messages: v.messages,
+          chatters: v.chatters.size,
+        }))
+        .sort((a, b) => b.messages - a.messages),
+    };
+  });
