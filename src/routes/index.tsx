@@ -8,7 +8,7 @@ import zoe from "@/assets/zoe.jpg";
 import willow from "@/assets/willow.jpg";
 import brittany from "@/assets/brittany.jpg";
 import harper from "@/assets/harper.jpg";
-import sienna from "@/assets/sienna.jpg";
+import piper from "@/assets/piper.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -70,7 +70,7 @@ const roommates = [
   },
   {
     name: "Piper",
-    img: sienna,
+    img: piper,
     tag: "The closed book",
     locked: true,
     line: "Composed, watchful, and impossible to rush. Piper gives you exactly as much as you've earned and not a word more. Say something true instead of something clever, and the page might finally turn.",
