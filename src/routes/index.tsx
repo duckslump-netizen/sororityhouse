@@ -298,8 +298,14 @@ function Index() {
               <li>Memory of everything you've told them</li>
               <li>Deeper storylines as trust builds</li>
             </ul>
-            <Button variant="hero" size="lg" className="mt-8 w-full">
-              Subscribe
+            <Button
+              variant="hero"
+              size="lg"
+              className="mt-8 w-full"
+              disabled={!!pending}
+              onClick={() => subscribe(PLANS.founders_monthly.priceId)}
+            >
+              {pending === PLANS.founders_monthly.priceId ? "Opening checkout…" : "Subscribe"}
             </Button>
           </div>
           <div className="rounded-2xl border border-accent/50 bg-card p-8">
