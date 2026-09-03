@@ -15,23 +15,17 @@ export interface CharacterSetting {
   enabled: boolean;
 }
 
-async function assertAdmin(context: { supabase: any; userId: string }) {
-  const { data, error } = await context.supabase.rpc("has_role", {
-    _user_id: context.userId,
-    _role: "admin",
-  });
-  if (error || !data) throw new Error("Forbidden");
+async function assertAdmin(context: { userId: string }) {
+  const { isAdminUser } = await import("@/lib/roles.server");
+  if (!(await isAdminUser(context.userId))) throw new Error("Forbidden");
 }
 
 /** Is the signed-in user an admin? Used to gate the admin UI. */
 export const checkIsAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<{ isAdmin: boolean }> => {
-    const { data } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    return { isAdmin: data === true };
+    const { isAdminUser } = await import("@/lib/roles.server");
+    return { isAdmin: await isAdminUser(context.userId) };
   });
 
 /** Full character config, including private personality prompt overrides. */

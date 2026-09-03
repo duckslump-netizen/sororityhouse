@@ -46,10 +46,8 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
       ["active", "trialing", "past_due", "canceled"].includes(sub.status);
 
     // Owner/admin accounts can test the room for free.
-    const { data: isAdmin } = await supabase.rpc("has_role", {
-      _user_id: userId,
-      _role: "admin",
-    });
+    const { isAdminUser } = await import("@/lib/roles.server");
+    const isAdmin = await isAdminUser(userId);
     const tier =
       isAdmin === true ? 2 : active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
 
