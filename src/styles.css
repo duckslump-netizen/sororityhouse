@@ -161,3 +161,42 @@
     color: var(--color-foreground);
   }
 }
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+}
+
+@utility text-gradient-neon {
+  background-image: var(--gradient-neon);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-neon {
+  background-image: var(--gradient-neon);
+}
+
+@utility bg-veil {
+  background-image: var(--gradient-veil);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+@utility glass-card {
+  background-color: color-mix(in oklab, var(--card) 70%, transparent);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+}
