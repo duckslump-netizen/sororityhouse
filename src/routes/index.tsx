@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Lock, DoorClosed } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useCheckout } from "@/hooks/useCheckout";
+import { PLANS } from "@/lib/stripe";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
 import {
