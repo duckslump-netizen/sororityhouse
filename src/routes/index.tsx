@@ -77,6 +77,14 @@ function Index() {
 
 
     <main className="min-h-screen bg-background text-foreground">
+      <nav className="absolute inset-x-0 top-0 z-20 flex justify-end px-6 py-5">
+        <Link
+          to={user ? "/account" : "/auth"}
+          className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
+        >
+          {user ? "My account" : "Sign in"}
+        </Link>
+      </nav>
       {/* Hero */}
       <section className="relative isolate overflow-hidden">
         <img
