@@ -120,7 +120,7 @@ function Index() {
       {/* Pick your girl */}
       <section className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-center text-4xl sm:text-5xl">Pick your girl</h2>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {roommates.map((r) => (
             <button
               key={r.name}
@@ -154,7 +154,7 @@ function Index() {
           ))}
         </div>
         <p className="mx-auto mt-10 max-w-2xl text-center text-base text-muted-foreground">
-          Four roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
+          Six roommates share one house and a whole lot of emotional armor. Dakota and Zoe are the
           two open doors. Willow and Brittany stay behind theirs until you prove you're worth it.
         </p>
         <div className="mt-6 flex justify-center">
@@ -212,7 +212,7 @@ function Index() {
         </div>
         <div className="mt-6 rounded-2xl border border-primary/40 px-6 py-6 text-center">
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Players who reached all four
+            Players who reached all six
           </p>
           <p className="text-gradient-neon mt-2 font-display text-6xl">0</p>
         </div>
