@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useSubscription } from "@/hooks/useSubscription";
+import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
+import { syncCheckoutSession } from "@/utils/payments.functions";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/checkout/return")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     status: typeof search["status"] === "string" ? (search["status"] as string) : "",
+    session_id:
+      typeof search["session_id"] === "string" ? (search["session_id"] as string) : "",
   }),
   head: () => ({
     meta: [
@@ -25,13 +30,19 @@ export const Route = createFileRoute("/checkout/return")({
 });
 
 function CheckoutReturn() {
-  const { status } = useSearch({ from: "/checkout/return" });
+  const { status, session_id: sessionId } = useSearch({ from: "/checkout/return" });
   const { isActive, refresh } = useSubscription();
+  const environment = usePaymentsEnvironment();
+  const sync = useServerFn(syncCheckoutSession);
   const [waited, setWaited] = useState(false);
 
-  // The webhook writes the membership row moments after payment, so poll briefly.
+  // The webhook writes the membership row moments after payment; we also
+  // reconcile straight from the session so nobody waits on delivery.
   useEffect(() => {
-    if (status !== "success") return;
+    if (status !== "success" || !environment) return;
+    if (sessionId) {
+      void sync({ data: { sessionId, environment } }).then(() => void refresh());
+    }
     const interval = setInterval(() => void refresh(), 1500);
     const timer = setTimeout(() => {
       clearInterval(interval);
@@ -41,7 +52,8 @@ function CheckoutReturn() {
       clearInterval(interval);
       clearTimeout(timer);
     };
-  }, [status, refresh]);
+  }, [status, sessionId, environment, sync, refresh]);
+
 
   const cancelled = status === "cancelled";
 
