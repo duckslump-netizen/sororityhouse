@@ -1,16 +1,14 @@
 # Roadmap
 
+## Done
+- [x] Landing page + sorority-house pivot (hero, six girls, 12-door hallway)
+- [x] Expandable character system (src/lib/characters.ts + personality files)
+- [x] Accounts, Founders ($9.99) and Full House ($14.99) products, hosted checkout, billing portal, webhooks, entitlements (sandbox verified)
+- [x] Real chat: per-girl chat window, message history, free 100-message trial counter, plan gating for Sasha + Piper
+
 ## Now
-- [x] Landing page for the four-roommate chat experiment (Dakota, Zoe, Willow, Brittany)
-- [x] Positioning: "can you get through their personal defenses" experiment
-- [x] Pricing: free trial up to 100 messages, then paid subscription
-- [x] Expandable character system (src/lib/characters.ts): personality files + unlock conditions for all six girls, 12-door house with reserved doors
-- [x] Pivot: sorority house framing — new hero title/subtitle, Dakota + Zoe unlocked, Willow + Brittany blurred/locked, hallway section (2 doors open, 8 shut, fire sign)
-- [ ] Add Founders and Full House products, embedded checkout, and subscription lifecycle rules
-- [ ] Close audited gaps across authentication, account management, entitlements, renewals, plan changes, and preview payment testing
+- [ ] Stripe live mode: user must finish go-live in the Payments tab (live keys/webhook are provisioned automatically after that)
 
 ## Later
-- [ ] Free 100-message chat with each girl (needs Lovable Cloud + AI)
-- [ ] Scoreboard driven by real tracked progress
-- [ ] Accounts + message counter (needs Lovable Cloud)
-- [ ] Checkout / subscriptions (payments enabled; implementation in progress)
+- [ ] Trust levels driving unlocks + real scoreboard data
+- [ ] Shared house conversations (multiple girls in one chat)
