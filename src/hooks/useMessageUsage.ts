@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { FREE_MESSAGE_LIMIT } from "@/lib/stripe";
@@ -7,6 +7,7 @@ import { FREE_MESSAGE_LIMIT } from "@/lib/stripe";
 export function useMessageUsage() {
   const { user, loading: authLoading } = useAuth();
   const [used, setUsed] = useState<number | null>(null);
+  const instanceId = useId();
 
   const load = useCallback(async () => {
     if (!user) {
@@ -29,7 +30,7 @@ export function useMessageUsage() {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel(`message_usage:${user.id}`)
+      .channel(`message_usage:${user.id}:${instanceId}`)
       .on(
         "postgres_changes",
         {
@@ -44,7 +45,7 @@ export function useMessageUsage() {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [user, load]);
+  }, [user, load, instanceId]);
 
   const remaining =
     used === null ? null : Math.max(0, FREE_MESSAGE_LIMIT - used);

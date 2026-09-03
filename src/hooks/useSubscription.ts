@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useId } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PLANS, type PlanPriceId } from "@/lib/stripe";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,6 +17,7 @@ export function useSubscription() {
   const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const instanceId = useId();
 
   const load = useCallback(async () => {
     if (!user || !environment) {
@@ -65,7 +66,7 @@ export function useSubscription() {
   useEffect(() => {
     if (!user) return;
     const channel = supabase
-      .channel(`subscriptions:${user.id}`)
+      .channel(`subscriptions:${user.id}:${instanceId}`)
       .on(
         "postgres_changes",
         {
@@ -80,7 +81,7 @@ export function useSubscription() {
     return () => {
       void supabase.removeChannel(channel);
     };
-  }, [user, load]);
+  }, [user, load, instanceId]);
 
   const periodActive =
     !subscription?.current_period_end ||
