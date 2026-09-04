@@ -23,13 +23,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ten doors, two open. Chat free for 100 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
+          "Ten doors, two open. Chat free for 50 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
       },
       { property: "og:title", content: "Welcome to the Sorority House" },
       {
         property: "og:description",
         content:
-          "Can you survive or will you thrive? 100 free messages, then subscribe to keep talking.",
+          "Can you survive or will you thrive? 50 free messages, then subscribe to keep talking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/")({
 
 const steps = [
   { n: "01", t: "Pick a roommate", d: "Four personalities, four very different sets of walls." },
-  { n: "02", t: "Start talking", d: "Your first 100 messages are free. No card, no catch." },
+  { n: "02", t: "Start talking", d: "Your first 50 messages are free. No card, no catch." },
   { n: "03", t: "Get past the guard", d: "Earn trust, and the conversation changes. Push, and it closes." },
 ];
 
@@ -173,11 +173,11 @@ function Index() {
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <Button variant="hero" size="lg" onClick={startTrial}>
-            {user ? "Go to my account" : "Start free — 100 messages"}
+            {user ? "Go to my account" : "Start free — 50 messages"}
           </Button>
         </div>
         <p className="mt-4 text-center text-xs text-muted-foreground">
-          No card required. The trial ends at message 100.
+          No card required. The trial ends at message 50.
         </p>
       </section>
 
@@ -291,12 +291,12 @@ function Index() {
 
       {/* Pricing */}
       <section className="mx-auto max-w-5xl px-6 py-24">
-        <h2 className="text-center text-4xl sm:text-5xl">You get 100 messages. They get the last word.</h2>
+        <h2 className="text-center text-4xl sm:text-5xl">You get 50 messages. They get the last word.</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-border p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Trial</p>
             <p className="mt-4 font-display text-6xl">Free</p>
-            <p className="mt-1 text-sm text-muted-foreground">Up to 100 messages, total.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Up to 50 messages, total.</p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
               <li>Dakota, Zoe, Willow &amp; Brittany unlocked</li>
               <li>No card required</li>

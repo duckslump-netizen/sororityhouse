@@ -17,4 +17,4 @@ export const PLANS = {
 export type PlanPriceId = keyof typeof PLANS;
 
 /** Free trial size before a subscription is required. */
-export const FREE_MESSAGE_LIMIT = 100;
+export const FREE_MESSAGE_LIMIT = 50;

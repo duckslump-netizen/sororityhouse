@@ -14,12 +14,12 @@ export const Route = createFileRoute("/auth")({
       {
         name: "description",
         content:
-          "Create an account or sign in to start your 100 free messages with the girls of the sorority house.",
+          "Create an account or sign in to start your 50 free messages with the girls of the sorority house.",
       },
       { property: "og:title", content: "Sign in — Welcome to the Sorority House" },
       {
         property: "og:description",
-        content: "Create an account to start your 100 free messages.",
+        content: "Create an account to start your 50 free messages.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -68,7 +68,7 @@ function AuthPage() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-16">
       <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-card/60 p-8 backdrop-blur">
         <h1 className="text-2xl font-black tracking-tight text-foreground">
-          {mode === "signup" ? "Get your 100 messages" : "Welcome back"}
+          {mode === "signup" ? "Get your 50 messages" : "Welcome back"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {mode === "signup"
