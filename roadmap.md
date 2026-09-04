@@ -30,3 +30,4 @@
 - [ ] Message top-up: 1,000 extra messages for $7 (one-time)
 - [ ] Bring a Wingman referral rewards
 - [ ] Group photo of the girls with locked faces blurred
+- [ ] Suggested girls can be private or shared with the house; sharing earns one free suggestion
