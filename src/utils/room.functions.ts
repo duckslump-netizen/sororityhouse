@@ -36,7 +36,7 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
     const { checkAllowance, recordUsage, resolveTier, tierForPrice } = await import(
       "@/lib/entitlements.server"
     );
-    const { tier } = await resolveTier(supabase, userId, isAdmin === true);
+    const { tier, priceId } = await resolveTier(supabase, userId, isAdmin === true);
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -71,7 +71,7 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
     }
 
     let messagesUsed: number | null = null;
-    const allowance = await checkAllowance(supabaseAdmin, userId, tier, isAdmin === true);
+    const allowance = await checkAllowance(supabaseAdmin, userId, tier, isAdmin === true, priceId);
     if (!allowance.ok) {
       return { error: allowance.error, limited: true };
     }

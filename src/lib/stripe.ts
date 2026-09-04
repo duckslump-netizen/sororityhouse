@@ -1,16 +1,25 @@
 /** Plans sold in the house, keyed by the price id used at checkout. */
 export const PLANS = {
+  starter_monthly: {
+    priceId: "starter_monthly",
+    name: "Starter",
+    price: "$7.99",
+    tier: 1,
+    messages: 1000,
+  },
   storyline_monthly: {
     priceId: "storyline_monthly",
     name: "Storyline Challenge",
     price: "$14.99",
     tier: 1,
+    messages: 2000,
   },
   all_access_monthly: {
     priceId: "all_access_monthly",
     name: "All Site Access",
     price: "$19.99",
     tier: 2,
+    messages: 2000,
   },
   // Legacy plans kept so existing members keep the access they paid for.
   founders_monthly: {
@@ -18,12 +27,14 @@ export const PLANS = {
     name: "Founders",
     price: "$9.99",
     tier: 1,
+    messages: 2000,
   },
   full_house_monthly: {
     priceId: "full_house_monthly",
     name: "Full House",
     price: "$14.99",
     tier: 2,
+    messages: 2000,
   },
 } as const;
 
@@ -44,6 +55,11 @@ export const FREE_MESSAGE_LIMIT = 25;
 
 /** Messages a paid member can send each calendar month. */
 export const MONTHLY_MESSAGE_LIMIT = 2000;
+
+/** Messages included with a given plan each calendar month. */
+export function monthlyLimitForPrice(priceId: string | null | undefined): number {
+  return isPlanPrice(priceId) ? PLANS[priceId].messages : MONTHLY_MESSAGE_LIMIT;
+}
 
 /** Messages added by one top-up purchase. */
 export const TOPUP_MESSAGES = 1000;
