@@ -4,9 +4,15 @@ import { Lock, DoorClosed } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useCheckout } from "@/hooks/useCheckout";
-import { PLANS } from "@/lib/stripe";
+import {
+  PLANS,
+  FREE_MESSAGE_LIMIT,
+  SUGGESTION_PRICE,
+  TOPUP_PRICE,
+} from "@/lib/stripe";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
+import houseGroup from "@/assets/house-group.jpg";
 import {
   characters as roommates,
   reservedDoors,
