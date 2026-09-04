@@ -316,21 +316,27 @@ function Index() {
         <div className="relative overflow-hidden rounded-3xl border border-border">
           <img
             src={houseGroup}
-            alt="The girls of the sorority house together in the neon-lit common room"
+            alt="The girls of the sorority house with a crowd of unnamed girls behind them, captioned Come get schooled"
             width={1536}
             height={1024}
             loading="lazy"
             className="w-full object-cover"
           />
-          {/* The right-hand girls stay out of focus until you unlock them. */}
+          {/* The girls on the right stay out of focus until you unlock them —
+              the caption along the bottom stays sharp. */}
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-1/2 backdrop-blur-xl"
+            className="pointer-events-none absolute right-0 top-0 h-3/4 w-1/2 backdrop-blur-xl"
             style={{
-              WebkitMaskImage: "linear-gradient(to right, transparent, black 35%)",
-              maskImage: "linear-gradient(to right, transparent, black 35%)",
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 35%), linear-gradient(to bottom, black 70%, transparent)",
+              maskImage:
+                "linear-gradient(to right, transparent, black 35%), linear-gradient(to bottom, black 70%, transparent)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect",
             }}
             aria-hidden="true"
           />
+
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6 pt-16">
             <p className="text-sm text-muted-foreground">
               Two faces you can already see. The rest come into focus when you unlock
