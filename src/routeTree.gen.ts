@@ -17,6 +17,7 @@ import { Route as RoomRouteImport } from './routes/room'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ChatCharacterIdRouteImport } from './routes/chat.$characterId'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
+import { Route as ProductHandleRouteImport } from './routes/product.$handle'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -59,6 +60,11 @@ const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   path: '/checkout/return',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductHandleRoute = ProductHandleRouteImport.update({
+  id: '/product/$handle',
+  path: '/product/$handle',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/product/$handle': typeof ProductHandleRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/product/$handle': typeof ProductHandleRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
   '/checkout/return': typeof CheckoutReturnRoute
+  '/product/$handle': typeof ProductHandleRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/chat/$characterId'
     | '/checkout/return'
+    | '/product/$handle'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/chat/$characterId'
     | '/checkout/return'
+    | '/product/$handle'
     | '/api/public/payments/webhook'
   id:
     | '__root__'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/chat/$characterId'
     | '/checkout/return'
+    | '/product/$handle'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   ChatCharacterIdRoute: typeof ChatCharacterIdRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
+  ProductHandleRoute: typeof ProductHandleRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutReturnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$handle': {
+      id: '/product/$handle'
+      path: '/product/$handle'
+      fullPath: '/product/$handle'
+      preLoaderRoute: typeof ProductHandleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   ChatCharacterIdRoute: ChatCharacterIdRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
+  ProductHandleRoute: ProductHandleRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
