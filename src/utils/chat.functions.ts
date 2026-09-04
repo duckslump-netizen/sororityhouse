@@ -32,25 +32,14 @@ export const sendChatMessage = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<SendResult> => {
     const { supabase, userId } = context;
 
-    // Current entitlement decides both the door and the message allowance.
-    const { data: sub } = await supabase
-      .from("subscriptions")
-      .select("price_id, status, current_period_end")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const periodOk =
-      !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
-    const active =
-      !!sub &&
-      periodOk &&
-      ["active", "trialing", "past_due", "canceled"].includes(sub.status);
     // Owner/admin accounts can test every door for free, always.
     const { isAdminUser } = await import("@/lib/roles.server");
     const isAdmin = await isAdminUser(userId);
-    const tier = isAdmin === true ? 2 : active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
+
+    const { checkAllowance, recordUsage, resolveTier, tierForPrice } = await import(
+      "@/lib/entitlements.server"
+    );
+    const { tier } = await resolveTier(supabase, userId, isAdmin === true);
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -66,36 +55,25 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       return { error: "That door is closed right now.", limited: true };
     }
 
-    const requiredTier = setting
-      ? setting.price_id === "full_house_monthly"
-        ? 2
-        : 1
+    const requiredTier = setting?.price_id
+      ? tierForPrice(setting.price_id)
       : FULL_HOUSE_ONLY.includes(data.characterId)
         ? 2
         : 1;
 
     if (requiredTier === 2 && tier < 2) {
       return {
-        error: "Her door is part of Full House. Upgrade to knock.",
+        error: "Her door is part of All Site Access. Upgrade to knock.",
         limited: true,
       };
     }
 
-
     let messagesUsed: number | null = null;
-    if (tier === 0) {
-      const { data: usage } = await supabaseAdmin
-        .from("message_usage")
-        .select("messages_used")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if ((usage?.messages_used ?? 0) >= FREE_MESSAGE_LIMIT) {
-        return {
-          error: "Your 50 free messages are gone. They got the last word.",
-          limited: true,
-        };
-      }
+    const allowance = await checkAllowance(supabaseAdmin, userId, tier, isAdmin === true);
+    if (!allowance.ok) {
+      return { error: allowance.error, limited: true };
     }
+
 
     // Recent history keeps her memory of the conversation intact.
     const { data: history } = await supabase
@@ -153,12 +131,8 @@ export const sendChatMessage = createServerFn({ method: "POST" })
       { user_id: userId, character_id: data.characterId, role: "assistant", content: reply },
     ]);
 
-    if (tier === 0) {
-      const { data: total } = await supabaseAdmin.rpc("increment_message_usage", {
-        _user_id: userId,
-      });
-      messagesUsed = typeof total === "number" ? total : null;
-    }
+    messagesUsed = await recordUsage(supabaseAdmin, userId, tier);
+
 
     return { reply, messagesUsed, limited: false };
   });
