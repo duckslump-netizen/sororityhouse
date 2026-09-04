@@ -6,10 +6,8 @@ import {
   isPlanPrice,
 } from "@/lib/stripe";
 
-type AnyClient = {
-  from: (table: string) => any;
-  rpc: (fn: string, args?: Record<string, unknown>) => any;
-};
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type AnyClient = any;
 
 /** Tier 2 = every door, tier 1 = storyline doors, tier 0 = free trial. */
 export function tierForPrice(priceId: string | null | undefined): 1 | 2 {
