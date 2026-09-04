@@ -93,7 +93,8 @@ export async function storefrontApiRequest(query: string, variables: any = {}): 
 }
 
 export async function fetchProducts(first = 50): Promise<ShopifyProduct[]> {
-  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first });
+  // Reward items (tagged referral-only) are earned, never sold — keep them out of the shop.
+  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query: "-tag:referral-only" });
   return data?.data?.products?.edges ?? [];
 }
 

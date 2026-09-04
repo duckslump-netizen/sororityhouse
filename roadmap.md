@@ -35,5 +35,5 @@
 ## New (Sep 4)
 - [x] Starter plan $7.99/mo for 1,000 messages
 - [ ] Tipping ($1 / $5) that can sway a girl either way
-- [x] House tee added to the store ($32, 2XL $36)
+- [x] House tee is referral-only (5 wingmen) — hidden from the shop, not for sale
 - [ ] More merch products in the store
