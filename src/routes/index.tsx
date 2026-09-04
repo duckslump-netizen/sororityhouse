@@ -63,6 +63,14 @@ function Index() {
   const { openCheckout, openBillingPortal, pending } = useCheckout();
   const navigate = useNavigate();
 
+  // Someone arriving from a friend's link keeps the code until they sign up.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("ref");
+    if (code) window.localStorage.setItem("wingman_code", code.toUpperCase());
+  }, []);
+
+
+
   function startTrial() {
     void navigate({ to: user ? "/account" : "/auth" });
   }
