@@ -24,10 +24,10 @@
 - [ ] User asked: move membership payments off Stripe to Shopify (needs Shopify subscription app + claimed store)
 
 ## Pricing revamp (Sep 4)
-- [ ] Storyline Challenge $14.99/mo + All Site Access $19.99/mo (2,000 messages/mo cap)
-- [ ] Free trial cut to 25 messages + monthly AI spend ceiling
-- [ ] Suggest-a-girl add-on $4.99/mo
-- [ ] Message top-up: 1,000 extra messages for $7 (one-time)
-- [ ] Bring a Wingman referral rewards
-- [ ] Group photo of the girls with locked faces blurred
-- [ ] Suggested girls can be private or shared with the house; sharing earns one free suggestion
+- [x] Storyline Challenge $14.99/mo + All Site Access $19.99/mo (2,000 messages/mo cap)
+- [x] Free trial cut to 25 messages + monthly AI spend ceiling
+- [x] Suggest-a-girl add-on $4.99/mo
+- [x] Message top-up: 1,000 extra messages for $7 (one-time)
+- [x] Bring a Wingman referral rewards
+- [x] Group photo of the girls with locked faces blurred
+- [x] Suggested girls can be private or shared with the house; sharing earns one free suggestion
