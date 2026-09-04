@@ -339,7 +339,7 @@ function Index() {
         <h2 className="text-center text-4xl sm:text-5xl">
           You get {FREE_MESSAGE_LIMIT} messages. They get the last word.
         </h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-border p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Trial</p>
             <p className="mt-4 font-display text-6xl">Free</p>
@@ -355,6 +355,32 @@ function Index() {
               Start the trial
             </Button>
           </div>
+          <div className="rounded-2xl border border-border p-8">
+            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+              {PLANS.starter_monthly.name}
+            </p>
+            <p className="mt-4 font-display text-6xl">
+              $7.99<span className="font-sans text-base text-muted-foreground">/mo</span>
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A light way in — 1,000 messages a month.
+            </p>
+            <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+              <li>1,000 messages a month</li>
+              <li>The open doors of the house</li>
+              <li>They remember what you tell them</li>
+            </ul>
+            <Button
+              variant="neon"
+              size="lg"
+              className="mt-8 w-full"
+              disabled={!!pending}
+              onClick={() => subscribe(PLANS.starter_monthly.priceId)}
+            >
+              {pending === PLANS.starter_monthly.priceId ? "Opening checkout…" : "Subscribe"}
+            </Button>
+          </div>
+
           <div className="relative rounded-2xl border border-primary/50 bg-card p-8 shadow-glow">
             <p className="text-xs uppercase tracking-[0.3em] text-accent">
               Storyline challenge
