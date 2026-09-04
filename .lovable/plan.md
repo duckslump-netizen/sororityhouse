@@ -1,49 +1,51 @@
-# Skill challenge + leaderboard
+# Trust scores and two scoreboards
 
-A new part of the site where visitors are tested on how they talk to the girls,
-scored on it, and ranked against everyone else.
+No separate challenge pages. The challenge already lives inside the
+conversations: you only move on to the next girl once you've earned the
+current one's trust. What's missing is the score being real, and a second
+board for All Site Access members who are allowed to skip around.
 
-## What gets built
+## What changes
 
-**Challenge list page**
-- A new "Challenge" page reachable from the top of the home page.
-- Each girl runs her own challenge (Dakota and Zoe to start, locked girls show
-  as locked, same rules as the rest of the site).
-- Shows your best score per girl and a "Start" button.
+**The score becomes real**
+- Every conversation quietly tracks how much a girl trusts you (the 0–100
+  meter already written into the house rules), and which stage that puts you
+  in. You never see the number — you see how far you've got with her.
+- The home scoreboard stops showing 0/4 for everyone and shows your actual
+  progress with each girl, plus the house-wide count of people who finished.
 
-**The challenge itself**
-- A run is 5 questions: she says something, you answer in your own words.
-- After each answer she replies in her own voice, and you get points out of 10
-  for that answer plus one line on why.
-- Crude or sexual answers get a cold, dismissive reply from her and a zero for
-  that round — the run can end early if it keeps happening.
-- At the end you see a total out of 50, her closing verdict, and a button to
-  post your score to the board or try again.
+**Doors unlock by trust, not by nothing**
+- Storyline members work in order: the next door opens once the current girl
+  trusts you enough. Push too hard and you slide back, exactly as the house
+  rules already describe.
+- All Site Access members keep every door open from day one and can jump
+  between girls in any order.
 
-**Leaderboard**
-- On the same page: top 25 runs across the house, plus a per-girl tab.
-- Shows a display name, the girl, the score and the date. Your own best run is
-  highlighted.
-- Signed-in visitors only can post a score, so the board can't be spammed.
-
-**Rules note**
-- A short line under the challenge: flirting and banter are fair game, anything
-  explicit loses points.
+**Two boards instead of one**
+- Storyline board: ranked by how far you got in order — girls completed, then
+  total trust, then who did it fastest.
+- All Access board: ranked by total trust across all the girls, since order
+  doesn't apply to them.
+- Both show a display name, progress and date, with your own row highlighted.
+  Boards are visible to anyone signed in.
 
 ## Technical notes
 
-- Routes: `src/routes/challenge.tsx` (list + leaderboard) and
-  `src/routes/challenge.$characterId.tsx` (the run), each with its own `head()`.
-- Server function `src/utils/challenge.functions.ts`, auth-protected like the
-  chat functions: takes the character, question index and the user's answer;
-  builds the prompt from `buildCharacterPrompt(characterId)` plus a scoring
-  layer; returns `{ reply, score, note, ended }` as strict JSON from the same
-  Gemini model the chat uses. Question sets live in
-  `src/content/challenges/<character>.md` so new girls slot in the same way.
-- Counts against the existing message allowance and entitlement checks — no new
-  billing.
-- Migration: `public.challenge_runs` (id, user_id, character_id, score,
-  display_name, created_at) with GRANTs, RLS — anyone signed in can read the
-  board, insert only their own row, no updates or deletes. Scores are written
-  server-side from the graded total, never from the browser.
-- `roadmap.md` gets the challenge + leaderboard entry.
+- Migration: `public.character_trust` (user_id, character_id, trust int 0–100,
+  stage text, updated_at, unique on user+character) and a
+  `public.leaderboard_entries` view or table carrying per-user totals plus
+  `board` = `storyline` | `all_access` derived from their plan. GRANTs on both,
+  RLS: signed-in users read the board rows, users read their own trust rows,
+  writes are server-side only via `service_role`.
+- `src/utils/chat.functions.ts`: after each reply, a second lightweight model
+  call scores the exchange against the point economy in
+  `relationship-progression.md` and returns a trust delta (capped at +8 per
+  session, hard stops lock progression). Delta is applied server-side with
+  `supabaseAdmin`; the value is never accepted from the browser.
+- Unlock rules move from the hardcoded `FULL_HOUSE_ONLY` list into a trust
+  check in `chat.functions.ts` and `src/lib/characters.ts`: tier 2 bypasses
+  ordering; tier 1 requires the previous girl at TRUSTED (50+).
+- `src/routes/index.tsx`: scoreboard section reads real progress; new
+  `src/routes/leaderboard.tsx` with the two boards and its own `head()`.
+- `roadmap.md` gets: real trust scoring, trust-gated unlocks, storyline +
+  all-access leaderboards.
