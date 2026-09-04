@@ -2,6 +2,7 @@ import {
   FREE_MESSAGE_LIMIT,
   HOUSE_MONTHLY_MESSAGE_CEILING,
   MONTHLY_MESSAGE_LIMIT,
+  monthlyLimitForPrice,
   PLANS,
   isPlanPrice,
 } from "@/lib/stripe";
@@ -57,6 +58,7 @@ export async function checkAllowance(
   userId: string,
   tier: 0 | 1 | 2,
   isAdmin: boolean,
+  priceId?: string | null,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   if (isAdmin) return { ok: true };
 
@@ -83,7 +85,7 @@ export async function checkAllowance(
     .eq("period_start", monthStart())
     .maybeSingle();
 
-  const allowed = MONTHLY_MESSAGE_LIMIT + (usage?.bonus_messages ?? 0);
+  const allowed = monthlyLimitForPrice(priceId) + (usage?.bonus_messages ?? 0);
   if ((month?.messages_used ?? 0) >= allowed) {
     return {
       ok: false,

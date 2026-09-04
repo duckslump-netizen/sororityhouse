@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useId, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { FREE_MESSAGE_LIMIT, MONTHLY_MESSAGE_LIMIT } from "@/lib/stripe";
+import { FREE_MESSAGE_LIMIT, monthlyLimitForPrice } from "@/lib/stripe";
+import { useSubscription } from "@/hooks/useSubscription";
 
 function monthStart() {
   const now = new Date();
@@ -13,6 +14,7 @@ function monthStart() {
 /** Free-trial and monthly counters for the signed-in member (own rows only). */
 export function useMessageUsage() {
   const { user, loading: authLoading } = useAuth();
+  const { subscription } = useSubscription();
   const [used, setUsed] = useState<number | null>(null);
   const [monthlyUsed, setMonthlyUsed] = useState<number | null>(null);
   const [bonus, setBonus] = useState(0);
@@ -70,7 +72,7 @@ export function useMessageUsage() {
 
   const remaining =
     used === null ? null : Math.max(0, FREE_MESSAGE_LIMIT - used);
-  const monthlyLimit = MONTHLY_MESSAGE_LIMIT + bonus;
+  const monthlyLimit = monthlyLimitForPrice(subscription?.price_id) + bonus;
   const monthlyRemaining =
     monthlyUsed === null ? null : Math.max(0, monthlyLimit - monthlyUsed);
 
