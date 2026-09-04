@@ -23,13 +23,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ten doors, two open. Chat free for 50 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
+          "Ten doors, two open. Chat free for 25 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
       },
       { property: "og:title", content: "Welcome to the Sorority House" },
       {
         property: "og:description",
         content:
-          "Can you survive or will you thrive? 50 free messages, then subscribe to keep talking.",
+          "Can you survive or will you thrive? 25 free messages, then subscribe to keep talking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/")({
 
 const steps = [
   { n: "01", t: "Pick a roommate", d: "Four personalities, four very different sets of walls." },
-  { n: "02", t: "Start talking", d: "Your first 50 messages are free. No card, no catch." },
+  { n: "02", t: "Start talking", d: "Your first 25 messages are free. No card, no catch." },
   { n: "03", t: "Get past the guard", d: "Earn trust, and the conversation changes. Push, and it closes." },
 ];
 
@@ -180,7 +180,7 @@ function Index() {
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <Button variant="hero" size="lg" onClick={startTrial}>
-            {user ? "Go to my account" : "Start free — 50 messages"}
+            {user ? "Go to my account" : "Start free — 25 messages"}
           </Button>
         </div>
         <p className="mt-4 text-center text-xs text-muted-foreground">
