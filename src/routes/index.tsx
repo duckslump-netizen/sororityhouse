@@ -220,7 +220,7 @@ function Index() {
           </p>
           <h2 className="mt-5 text-4xl leading-tight sm:text-5xl">
             Are you charming enough to get through everyone — or will you have to{" "}
-            <span className="text-gradient-neon">go back to school?</span>
+            <span className="text-gradient-neon">go to detention?</span>
           </h2>
 
           {/* The hall of doors — extras are reserved for future sorority members */}
