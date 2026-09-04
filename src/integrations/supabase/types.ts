@@ -62,20 +62,56 @@ export type Database = {
         }
         Relationships: []
       }
+      girl_suggestions: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          notes: string
+          status: string
+          user_id: string
+          vibe: string
+          visibility: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string
+          status?: string
+          user_id: string
+          vibe?: string
+          visibility?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string
+          status?: string
+          user_id?: string
+          vibe?: string
+          visibility?: string
+        }
+        Relationships: []
+      }
       message_usage: {
         Row: {
+          bonus_messages: number
           created_at: string
           messages_used: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          bonus_messages?: number
           created_at?: string
           messages_used?: number
           updated_at?: string
           user_id: string
         }
         Update: {
+          bonus_messages?: number
           created_at?: string
           messages_used?: number
           updated_at?: string
@@ -110,27 +146,84 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_message_usage: {
+        Row: {
+          messages_used: number
+          period_start: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          messages_used?: number
+          period_start: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          messages_used?: number
+          period_start?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
           display_name: string | null
           email: string | null
+          free_suggestions: number
           id: string
+          referral_code: string | null
+          referred_by: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          free_suggestions?: number
           id: string
+          referral_code?: string | null
+          referred_by?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           display_name?: string | null
           email?: string | null
+          free_suggestions?: number
           id?: string
+          referral_code?: string | null
+          referred_by?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          referred_user_id: string
+          referrer_id: string
+          reward_granted: boolean
+          subscribed: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          referred_user_id: string
+          referrer_id: string
+          reward_granted?: boolean
+          subscribed?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          referred_user_id?: string
+          referrer_id?: string
+          reward_granted?: boolean
+          subscribed?: boolean
         }
         Relationships: []
       }
@@ -220,6 +313,7 @@ export type Database = {
         Returns: boolean
       }
       increment_message_usage: { Args: { _user_id: string }; Returns: number }
+      increment_monthly_usage: { Args: { _user_id: string }; Returns: number }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
