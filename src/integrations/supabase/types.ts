@@ -298,42 +298,7 @@ export type Database = {
       }
     }
     Views: {
-      characters_public: {
-        Row: {
-          character_id: string | null
-          enabled: boolean | null
-          name: string | null
-          sort_order: number | null
-          tag: string | null
-          tagline: string | null
-          unlock_character: string | null
-          unlock_level: number | null
-          unlock_type: string | null
-        }
-        Insert: {
-          character_id?: string | null
-          enabled?: boolean | null
-          name?: string | null
-          sort_order?: number | null
-          tag?: string | null
-          tagline?: string | null
-          unlock_character?: string | null
-          unlock_level?: number | null
-          unlock_type?: string | null
-        }
-        Update: {
-          character_id?: string | null
-          enabled?: boolean | null
-          name?: string | null
-          sort_order?: number | null
-          tag?: string | null
-          tagline?: string | null
-          unlock_character?: string | null
-          unlock_level?: number | null
-          unlock_type?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       has_active_subscription: {
