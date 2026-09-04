@@ -441,9 +441,13 @@ function Index() {
           <h3 className="text-2xl">Bring a wingman, not a woman</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Share your invite code from your account page. Every friend who signs up
-            earns you free messages.
+            earns you free messages — and at 5 signups you get the black house tee free.
+          </p>
+          <p className="mt-2 text-xs uppercase tracking-[0.3em] text-accent">
+            Exclusive — only available through referrals
           </p>
         </div>
+
       </section>
 
 
