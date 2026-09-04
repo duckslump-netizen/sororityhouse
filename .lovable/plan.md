@@ -1,41 +1,49 @@
-# Finish the shop
+# Skill challenge + leaderboard
 
-The store has four real items (Dakota hoodie and tee, Zoe hoodie and tee) plus the
-referral-only tee that stays hidden from the shop. There is also a leftover blank
-item called "Untitled Sep4_13:29:41" that shoppers can currently see.
+A new part of the site where visitors are tested on how they talk to the girls,
+scored on it, and ranked against everyone else.
 
-## What changes
+## What gets built
 
-**Clean up the store**
-- Remove the leftover blank "Untitled" item so only real merch shows.
+**Challenge list page**
+- A new "Challenge" page reachable from the top of the home page.
+- Each girl runs her own challenge (Dakota and Zoe to start, locked girls show
+  as locked, same rules as the rest of the site).
+- Shows your best score per girl and a "Start" button.
 
-**Size picking that actually works**
-- On the shop grid, "Add to cart" currently always adds the first size. Replace it
-  with a size row (S, M, L, XL, 2XL) so shoppers choose before adding, and show
-  sold-out sizes as unavailable.
-- On the item page, group the size buttons under a clear "Size" label, show the
-  price for the chosen size, and let shoppers pick how many to buy.
+**The challenge itself**
+- A run is 5 questions: she says something, you answer in your own words.
+- After each answer she replies in her own voice, and you get points out of 10
+  for that answer plus one line on why.
+- Crude or sexual answers get a cold, dismissive reply from her and a zero for
+  that round — the run can end early if it keeps happening.
+- At the end you see a total out of 50, her closing verdict, and a button to
+  post your score to the board or try again.
 
-**Easier to shop**
-- Add a basket button to the top of the home page so people can get back to their
-  basket from anywhere, with a count of what's in it.
-- Show a short confirmation when something is added.
+**Leaderboard**
+- On the same page: top 25 runs across the house, plus a per-girl tab.
+- Shows a display name, the girl, the score and the date. Your own best run is
+  highlighted.
+- Signed-in visitors only can post a score, so the board can't be spammed.
 
-**Item pages that look right when shared**
-- Each item page gets its own title, description and preview picture pulled from
-  the item, instead of the same generic text for every product.
-- Show a small gallery when an item has more than one photo.
-
-**Empty and error wording**
-- Friendlier wording in the house voice when the shop is empty or slow to load.
+**Rules note**
+- A short line under the challenge: flirting and banter are fair game, anything
+  explicit loses points.
 
 ## Technical notes
 
-- Delete Shopify product 8950925557913.
-- `src/routes/shop.tsx`: per-card variant state, availability-aware size buttons,
-  toast on add.
-- `src/routes/product.$handle.tsx`: loader-backed fetch so `head()` can emit
-  product-specific title/description/`og:image` (absolute Shopify CDN URL),
-  quantity stepper, image thumbnails.
-- `src/routes/index.tsx`: render `<CartDrawer />` in the top nav.
-- Cart store, checkout flow and `fetchProducts` tag filtering stay as they are.
+- Routes: `src/routes/challenge.tsx` (list + leaderboard) and
+  `src/routes/challenge.$characterId.tsx` (the run), each with its own `head()`.
+- Server function `src/utils/challenge.functions.ts`, auth-protected like the
+  chat functions: takes the character, question index and the user's answer;
+  builds the prompt from `buildCharacterPrompt(characterId)` plus a scoring
+  layer; returns `{ reply, score, note, ended }` as strict JSON from the same
+  Gemini model the chat uses. Question sets live in
+  `src/content/challenges/<character>.md` so new girls slot in the same way.
+- Counts against the existing message allowance and entitlement checks — no new
+  billing.
+- Migration: `public.challenge_runs` (id, user_id, character_id, score,
+  display_name, created_at) with GRANTs, RLS — anyone signed in can read the
+  board, insert only their own row, no updates or deletes. Scores are written
+  server-side from the graded total, never from the browser.
+- `roadmap.md` gets the challenge + leaderboard entry.
