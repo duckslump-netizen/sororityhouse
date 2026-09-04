@@ -20,3 +20,5 @@
 ## Shop
 - [x] Shopify dev store connected + /shop and /product/$handle with real cart & checkout
 - [ ] Add merch products (hoodies, tees) to the store
+
+- [ ] User asked: move membership payments off Stripe to Shopify (needs Shopify subscription app + claimed store)
