@@ -438,7 +438,7 @@ function Index() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-primary/40 bg-card/60 p-6 text-center">
-          <h3 className="text-2xl">Bring a wingman</h3>
+          <h3 className="text-2xl">Bring a wingman, not a woman</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Share your invite code from your account page. Every friend who signs up
             earns you free messages.
