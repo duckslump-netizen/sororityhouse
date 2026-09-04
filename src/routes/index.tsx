@@ -87,6 +87,13 @@ function Index() {
           </Link>
         )}
         <Link
+          to="/shop"
+          className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
+        >
+          Merch
+        </Link>
+
+        <Link
           to={user ? "/account" : "/auth"}
           className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground"
         >
