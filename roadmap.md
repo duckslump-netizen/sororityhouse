@@ -16,3 +16,7 @@
 - [ ] Shared house conversations (multiple girls in one chat)
 
 - [x] Shared common room (/room) — whole house in one conversation
+
+## Shop
+- [x] Shopify dev store connected + /shop and /product/$handle with real cart & checkout
+- [ ] Add merch products (hoodies, tees) to the store
