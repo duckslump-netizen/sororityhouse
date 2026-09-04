@@ -14,12 +14,12 @@ export const Route = createFileRoute("/auth")({
       {
         name: "description",
         content:
-          "Create an account or sign in to start your 50 free messages with the girls of the sorority house.",
+          "Create an account or sign in to start your 25 free messages with the girls of the sorority house.",
       },
       { property: "og:title", content: "Sign in — Welcome to the Sorority House" },
       {
         property: "og:description",
-        content: "Create an account to start your 50 free messages.",
+        content: "Create an account to start your 25 free messages.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

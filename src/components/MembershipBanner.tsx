@@ -10,7 +10,7 @@ import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
  */
 export function MembershipBanner() {
   const { isActive, isPastDue, plan, loading } = useSubscription();
-  const { remaining } = useMessageUsage();
+  const { remaining, monthlyRemaining } = useMessageUsage();
   const environment = usePaymentsEnvironment();
 
   if (loading) return null;
@@ -43,6 +43,15 @@ export function MembershipBanner() {
         {isActive && plan && (
           <span>
             {plan.name} member — {plan.price}/mo
+            {monthlyRemaining !== null && (
+              <>
+                {" · "}
+                <span className="font-bold text-foreground">
+                  {monthlyRemaining.toLocaleString()}
+                </span>{" "}
+                messages left this month
+              </>
+            )}
           </span>
         )}
         {testMode && (
