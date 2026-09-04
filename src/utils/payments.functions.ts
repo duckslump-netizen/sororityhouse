@@ -57,26 +57,31 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }): Promise<CheckoutSessionResult> => {
     const { supabase, userId } = context;
+    const { TOPUP_PRICE_ID, TOPUP_MESSAGES, isPlanPrice } = await import("@/lib/stripe");
+    const isTopUp = data.priceId === TOPUP_PRICE_ID;
+    const isPlan = isPlanPrice(data.priceId);
 
-    // A member who already subscribes changes plans in the portal, not here.
-    const { data: existing } = await supabase
-      .from("subscriptions")
-      .select("status, current_period_end")
-      .eq("user_id", userId)
-      .eq("environment", data.environment)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+    if (isPlan) {
+      // A member who already subscribes changes plans in the portal, not here.
+      const { data: rows } = await supabase
+        .from("subscriptions")
+        .select("price_id, status, current_period_end")
+        .eq("user_id", userId)
+        .eq("environment", data.environment)
+        .order("created_at", { ascending: false })
+        .limit(10);
 
-    if (
-      existing &&
-      ["active", "trialing", "past_due"].includes(existing.status) &&
-      (!existing.current_period_end ||
-        new Date(existing.current_period_end) > new Date())
-    ) {
-      return {
-        error: "You already have an active plan. Use Manage billing to change it.",
-      };
+      const existing = (rows ?? []).find((r) => isPlanPrice(r.price_id));
+      if (
+        existing &&
+        ["active", "trialing", "past_due"].includes(existing.status) &&
+        (!existing.current_period_end ||
+          new Date(existing.current_period_end) > new Date())
+      ) {
+        return {
+          error: "You already have an active plan. Use Manage billing to change it.",
+        };
+      }
     }
 
     try {
@@ -101,15 +106,20 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       // supported countries, plus fraud, disputes and receipt emails.
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: stripePrice.id, quantity: 1 }],
-        mode: "subscription",
+        mode: isTopUp ? "payment" : "subscription",
         success_url: `${data.returnUrl}?status=success&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${data.returnUrl}?status=cancelled`,
 
         customer: customerId,
         managed_payments: { enabled: true },
-        metadata: { userId, managed_payments: "true" },
-        subscription_data: { metadata: { userId } },
+        metadata: {
+          userId,
+          managed_payments: "true",
+          ...(isTopUp ? { topupMessages: String(TOPUP_MESSAGES) } : {}),
+        },
+        ...(isTopUp ? {} : { subscription_data: { metadata: { userId } } }),
       } as Stripe.Checkout.SessionCreateParams);
+
 
       if (!session.url) throw new Error("Checkout session has no URL");
       return { url: session.url };
@@ -219,6 +229,10 @@ export const syncCheckoutSession = createServerFn({ method: "POST" })
 const PRODUCT_TAX_CODES: Record<string, string> = {
   founders_plan: "txcd_10103001",
   full_house_plan: "txcd_10103001",
+  storyline_plan: "txcd_10103001",
+  all_access_plan: "txcd_10103001",
+  suggestion_plan: "txcd_10103001",
+  topup_plan: "txcd_10103001",
 };
 
 /**

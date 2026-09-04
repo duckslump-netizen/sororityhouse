@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useId } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { PLANS, type PlanPriceId } from "@/lib/stripe";
+import { PLANS, isPlanPrice, type PlanPriceId } from "@/lib/stripe";
 import { useAuth } from "@/hooks/useAuth";
 import { usePaymentsEnvironment } from "@/hooks/usePaymentsEnvironment";
 
@@ -25,15 +25,17 @@ export function useSubscription() {
       setLoading(!!user && !environment);
       return;
     }
+    // Add-ons (suggestions, top-ups) also live here, so pick the newest
+    // row that is an actual plan.
     const { data } = await supabase
       .from("subscriptions")
       .select("price_id, status, current_period_end, cancel_at_period_end")
       .eq("user_id", user.id)
       .eq("environment", environment)
       .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    setSubscription((data as SubscriptionRow | null) ?? null);
+      .limit(10);
+    const rows = (data ?? []) as SubscriptionRow[];
+    setSubscription(rows.find((r) => isPlanPrice(r.price_id)) ?? null);
     setLoading(false);
   }, [user, environment]);
 
@@ -105,7 +107,7 @@ export function useSubscription() {
     isActive: isActive || isAdmin,
     isPastDue: subscription?.status === "past_due",
     plan: isActive ? plan : null,
-    /** 0 = free trial, 1 = Founders (first four), 2 = Full House (all six). */
+    /** 0 = free trial, 1 = Storyline Challenge, 2 = All Site Access. */
     tier: isAdmin ? 2 : isActive ? (plan?.tier ?? 0) : 0,
     refresh: load,
   };

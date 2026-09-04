@@ -1,12 +1,19 @@
+import { useEffect } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Lock, DoorClosed } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useCheckout } from "@/hooks/useCheckout";
-import { PLANS } from "@/lib/stripe";
+import {
+  PLANS,
+  FREE_MESSAGE_LIMIT,
+  SUGGESTION_PRICE,
+  TOPUP_PRICE,
+} from "@/lib/stripe";
 import heroLoft from "@/assets/hero-loft.jpg";
 import hallway from "@/assets/hallway.jpg";
+import houseGroup from "@/assets/house-group.jpg";
 import {
   characters as roommates,
   reservedDoors,
@@ -23,13 +30,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ten doors, two open. Chat free for 50 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
+          "Ten doors, two open. Chat free for 25 messages and see if you're charming enough to get through Dakota, Zoe and the girls behind the locked doors.",
       },
       { property: "og:title", content: "Welcome to the Sorority House" },
       {
         property: "og:description",
         content:
-          "Can you survive or will you thrive? 50 free messages, then subscribe to keep talking.",
+          "Can you survive or will you thrive? 25 free messages, then subscribe to keep talking.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -46,7 +53,7 @@ export const Route = createFileRoute("/")({
 
 const steps = [
   { n: "01", t: "Pick a roommate", d: "Four personalities, four very different sets of walls." },
-  { n: "02", t: "Start talking", d: "Your first 50 messages are free. No card, no catch." },
+  { n: "02", t: "Start talking", d: "Your first 25 messages are free. No card, no catch." },
   { n: "03", t: "Get past the guard", d: "Earn trust, and the conversation changes. Push, and it closes." },
 ];
 
@@ -56,6 +63,14 @@ function Index() {
   const { isActive } = useSubscription();
   const { openCheckout, openBillingPortal, pending } = useCheckout();
   const navigate = useNavigate();
+
+  // Someone arriving from a friend's link keeps the code until they sign up.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("ref");
+    if (code) window.localStorage.setItem("wingman_code", code.toUpperCase());
+  }, []);
+
+
 
   function startTrial() {
     void navigate({ to: user ? "/account" : "/auth" });
@@ -180,7 +195,7 @@ function Index() {
         </p>
         <div className="mt-6 flex justify-center gap-3">
           <Button variant="hero" size="lg" onClick={startTrial}>
-            {user ? "Go to my account" : "Start free — 50 messages"}
+            {user ? "Go to my account" : "Start free — 25 messages"}
           </Button>
         </div>
         <p className="mt-4 text-center text-xs text-muted-foreground">
@@ -296,16 +311,49 @@ function Index() {
         </div>
       </section>
 
+      {/* Group photo — locked girls stay blurred */}
+      <section className="mx-auto max-w-5xl px-6 pt-24">
+        <div className="relative overflow-hidden rounded-3xl border border-border">
+          <img
+            src={houseGroup}
+            alt="The girls of the sorority house together in the neon-lit common room"
+            width={1536}
+            height={1024}
+            loading="lazy"
+            className="w-full object-cover"
+          />
+          {/* The right-hand girls stay out of focus until you unlock them. */}
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-1/2 backdrop-blur-xl"
+            style={{
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 35%)",
+              maskImage: "linear-gradient(to right, transparent, black 35%)",
+            }}
+            aria-hidden="true"
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6 pt-16">
+            <p className="text-sm text-muted-foreground">
+              Two faces you can already see. The rest come into focus when you unlock
+              them — and new girls move in every month.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section className="mx-auto max-w-5xl px-6 py-24">
-        <h2 className="text-center text-4xl sm:text-5xl">You get 50 messages. They get the last word.</h2>
+        <h2 className="text-center text-4xl sm:text-5xl">
+          You get {FREE_MESSAGE_LIMIT} messages. They get the last word.
+        </h2>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-border p-8">
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">Trial</p>
             <p className="mt-4 font-display text-6xl">Free</p>
-            <p className="mt-1 text-sm text-muted-foreground">Up to 50 messages, total.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Up to {FREE_MESSAGE_LIMIT} messages, total.
+            </p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>Dakota, Zoe, Willow &amp; Brittany unlocked</li>
+              <li>Dakota &amp; Zoe's doors are open</li>
               <li>No card required</li>
               <li>Live message counter</li>
             </ul>
@@ -314,56 +362,84 @@ function Index() {
             </Button>
           </div>
           <div className="relative rounded-2xl border border-primary/50 bg-card p-8 shadow-glow">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">Founders discount</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent">
+              Storyline challenge
+            </p>
             <p className="mt-4 font-display text-6xl">
-              $9.99<span className="font-sans text-base text-muted-foreground">/mo</span>
+              $14.99<span className="font-sans text-base text-muted-foreground">/mo</span>
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              The first four girls. Founders price — locked in for life. Cancel anytime.
+              Work your way through the challenge at your own pace.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>Unlimited chat with Dakota, Zoe, Willow &amp; Brittany</li>
-              <li>Memory of everything you've told them</li>
-              <li>Deeper storylines as trust builds</li>
+              <li>Earn each door the hard way</li>
+              <li>2,000 messages a month</li>
+              <li>They remember everything you tell them</li>
             </ul>
             <Button
               variant="hero"
               size="lg"
               className="mt-8 w-full"
               disabled={!!pending}
-              onClick={() => subscribe(PLANS.founders_monthly.priceId)}
+              onClick={() => subscribe(PLANS.storyline_monthly.priceId)}
             >
-              {pending === PLANS.founders_monthly.priceId ? "Opening checkout…" : "Subscribe"}
+              {pending === PLANS.storyline_monthly.priceId ? "Opening checkout…" : "Subscribe"}
             </Button>
           </div>
           <div className="rounded-2xl border border-accent/50 bg-card p-8">
-            <p className="text-xs uppercase tracking-[0.3em] text-accent">Full house</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-accent">All site access</p>
             <p className="mt-4 font-display text-6xl">
-              $14.99<span className="font-sans text-base text-muted-foreground">/mo</span>
+              $19.99<span className="font-sans text-base text-muted-foreground">/mo</span>
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              +$4.99 on top of founders when you unlock Sasha &amp; Piper.
+              Are you the impatient type? Come on in and see the girls — new ones
+              moving in monthly.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-              <li>Everything in the founders plan</li>
-              <li>Sasha &amp; Piper unlocked behind their doors</li>
-              <li>Shared house conversations with all six</li>
+              <li>Every door open from day one</li>
+              <li>Shared house conversations with everyone</li>
+              <li>2,000 messages a month</li>
             </ul>
             <Button
               variant="neon"
               size="lg"
               className="mt-8 w-full"
               disabled={!!pending}
-              onClick={() => subscribe(PLANS.full_house_monthly.priceId)}
+              onClick={() => subscribe(PLANS.all_access_monthly.priceId)}
             >
-              {pending === PLANS.full_house_monthly.priceId
+              {pending === PLANS.all_access_monthly.priceId
                 ? "Opening checkout…"
-                : "Unlock the full house"}
+                : "Get all access"}
             </Button>
           </div>
         </div>
 
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="rounded-2xl border border-border p-6">
+            <h3 className="text-2xl">Out of messages?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Add 1,000 more messages for {TOPUP_PRICE}, any time, from your account
+              page.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border p-6">
+            <h3 className="text-2xl">Suggest a girl</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {SUGGESTION_PRICE}/mo lets you pitch a girl for the house — keep her
+              private or share her with everyone and earn a free request.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-primary/40 bg-card/60 p-6 text-center">
+          <h3 className="text-2xl">Bring a wingman</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Share your invite code from your account page. Every friend who signs up
+            earns you free messages.
+          </p>
+        </div>
       </section>
+
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-10 text-xs text-muted-foreground sm:flex-row">

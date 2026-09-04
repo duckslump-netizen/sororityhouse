@@ -2,7 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { buildSharedPrompt } from "@/lib/personalities";
 import { characters } from "@/lib/characters";
-import { FREE_MESSAGE_LIMIT } from "@/lib/stripe";
 
 /** Room transcripts are stored in `messages` under this pseudo-character id. */
 export const ROOM_ID = "house-room";
@@ -30,26 +29,14 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
   .handler(async ({ data, context }): Promise<RoomResult> => {
     const { supabase, userId } = context;
 
-    const { data: sub } = await supabase
-      .from("subscriptions")
-      .select("price_id, status, current_period_end")
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    const periodOk =
-      !sub?.current_period_end || new Date(sub.current_period_end) > new Date();
-    const active =
-      !!sub &&
-      periodOk &&
-      ["active", "trialing", "past_due", "canceled"].includes(sub.status);
-
     // Owner/admin accounts can test the room for free.
     const { isAdminUser } = await import("@/lib/roles.server");
     const isAdmin = await isAdminUser(userId);
-    const tier =
-      isAdmin === true ? 2 : active ? (sub?.price_id === "full_house_monthly" ? 2 : 1) : 0;
+
+    const { checkAllowance, recordUsage, resolveTier, tierForPrice } = await import(
+      "@/lib/entitlements.server"
+    );
+    const { tier } = await resolveTier(supabase, userId, isAdmin === true);
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -72,9 +59,7 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
       if (settings && settings.length > 0 && !enabledIds.has(c.id)) return false;
       const priceId = priceById.get(c.id);
       const requiredTier = priceId
-        ? priceId === "full_house_monthly"
-          ? 2
-          : 1
+        ? tierForPrice(priceId)
         : FULL_HOUSE_ONLY.includes(c.id)
           ? 2
           : 1;
@@ -86,19 +71,11 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
     }
 
     let messagesUsed: number | null = null;
-    if (tier === 0) {
-      const { data: usage } = await supabaseAdmin
-        .from("message_usage")
-        .select("messages_used")
-        .eq("user_id", userId)
-        .maybeSingle();
-      if ((usage?.messages_used ?? 0) >= FREE_MESSAGE_LIMIT) {
-        return {
-          error: "Your 50 free messages are gone. They got the last word.",
-          limited: true,
-        };
-      }
+    const allowance = await checkAllowance(supabaseAdmin, userId, tier, isAdmin === true);
+    if (!allowance.ok) {
+      return { error: allowance.error, limited: true };
     }
+
 
     const { data: history } = await supabase
       .from("messages")
@@ -188,12 +165,8 @@ each other, not only to the user.`,
       },
     ]);
 
-    if (tier === 0) {
-      const { data: total } = await supabaseAdmin.rpc("increment_message_usage", {
-        _user_id: userId,
-      });
-      messagesUsed = typeof total === "number" ? total : null;
-    }
+    messagesUsed = await recordUsage(supabaseAdmin, userId, tier);
+
 
     return { turns, messagesUsed, limited: false };
   });
