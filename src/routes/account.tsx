@@ -98,7 +98,7 @@ function AccountPage() {
           <>
             <h2 className="text-xl font-bold">Free trial</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              100 messages. They get the last word.
+              50 messages. They get the last word.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Button

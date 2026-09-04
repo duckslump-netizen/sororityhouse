@@ -94,7 +94,7 @@ export const sendRoomMessage = createServerFn({ method: "POST" })
         .maybeSingle();
       if ((usage?.messages_used ?? 0) >= FREE_MESSAGE_LIMIT) {
         return {
-          error: "Your 100 free messages are gone. They got the last word.",
+          error: "Your 50 free messages are gone. They got the last word.",
           limited: true,
         };
       }
