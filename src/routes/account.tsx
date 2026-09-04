@@ -211,7 +211,7 @@ function AccountPage() {
       </section>
 
       <section className="mt-6 rounded-2xl border border-border/60 bg-card/60 p-6">
-        <h2 className="text-xl font-bold">Bring a wingman</h2>
+        <h2 className="text-xl font-bold">Bring a wingman, not a woman</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Every friend who signs up with your link earns you 50 bonus messages.
         </p>
