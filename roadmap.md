@@ -31,3 +31,8 @@
 - [x] Bring a Wingman referral rewards
 - [x] Group photo of the girls with locked faces blurred
 - [x] Suggested girls can be private or shared with the house; sharing earns one free suggestion
+
+## New (Sep 4)
+- [x] Starter plan $7.99/mo for 1,000 messages
+- [ ] Tipping ($1 / $5) that can sway a girl either way
+- [ ] More merch products in the store
