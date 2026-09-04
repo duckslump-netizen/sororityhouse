@@ -213,7 +213,9 @@ function AccountPage() {
       <section className="mt-6 rounded-2xl border border-border/60 bg-card/60 p-6">
         <h2 className="text-xl font-bold">Bring a wingman, not a woman</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Every friend who signs up with your link earns you 50 bonus messages.
+          Every friend who signs up with your link earns you 50 bonus messages. Get 5
+          friends in and we send you the black house tee — same artwork as the hoodie,
+          free, and you can't buy it anywhere. Referrals only.
         </p>
         {wingman ? (
           <>
@@ -235,11 +237,31 @@ function AccountPage() {
               {wingman.signups} signed up · {wingman.rewarded} rewarded ·{" "}
               {wingman.bonusMessages.toLocaleString()} bonus messages earned.
             </p>
+            <div className="mt-4 rounded-xl border border-primary/40 p-4">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">Free black house tee</span>
+                <span className="text-muted-foreground">
+                  {Math.min(wingman.signups, 5)}/5 referrals
+                </span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full rounded-full bg-primary"
+                  style={{ width: `${Math.min(wingman.signups / 5, 1) * 100}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {wingman.signups >= 5
+                  ? "It's yours — email us your size and address and the tee ships out."
+                  : `${5 - wingman.signups} more signup${5 - wingman.signups === 1 ? "" : "s"} and the exclusive tee is yours.`}
+              </p>
+            </div>
           </>
         ) : (
           <p className="mt-3 text-sm text-muted-foreground">Loading your invite link…</p>
         )}
       </section>
+
 
       <section className="mt-6 rounded-2xl border border-border/60 bg-card/60 p-6">
         <h2 className="text-xl font-bold">Suggest a girl</h2>
