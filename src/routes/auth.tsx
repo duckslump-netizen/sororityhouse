@@ -68,7 +68,7 @@ function AuthPage() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-16">
       <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-card/60 p-8 backdrop-blur">
         <h1 className="text-2xl font-black tracking-tight text-foreground">
-          {mode === "signup" ? "Get your 100 messages" : "Welcome back"}
+          {mode === "signup" ? "Get your 50 messages" : "Welcome back"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {mode === "signup"
