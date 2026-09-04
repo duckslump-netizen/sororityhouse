@@ -322,20 +322,8 @@ function Index() {
             loading="lazy"
             className="w-full object-cover"
           />
-          {/* The girls on the right stay out of focus until you unlock them —
-              the caption along the bottom stays sharp. */}
-          <div
-            className="pointer-events-none absolute right-0 top-0 h-3/4 w-1/2 backdrop-blur-xl"
-            style={{
-              WebkitMaskImage:
-                "linear-gradient(to right, transparent, black 35%), linear-gradient(to bottom, black 70%, transparent)",
-              maskImage:
-                "linear-gradient(to right, transparent, black 35%), linear-gradient(to bottom, black 70%, transparent)",
-              WebkitMaskComposite: "source-in",
-              maskComposite: "intersect",
-            }}
-            aria-hidden="true"
-          />
+
+
 
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background to-transparent p-6 pt-16">
             <p className="text-sm text-muted-foreground">
