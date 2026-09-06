@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as RoomRouteImport } from './routes/room'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ChatCharacterIdRouteImport } from './routes/chat.$characterId'
@@ -38,6 +39,11 @@ const AdminRoute = AdminRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoomRoute = RoomRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/gallery': typeof GalleryRoute
   '/room': typeof RoomRoute
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/gallery': typeof GalleryRoute
   '/room': typeof RoomRoute
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/account': typeof AccountRoute
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
+  '/gallery': typeof GalleryRoute
   '/room': typeof RoomRoute
   '/shop': typeof ShopRoute
   '/chat/$characterId': typeof ChatCharacterIdRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/auth'
+    | '/gallery'
     | '/room'
     | '/shop'
     | '/chat/$characterId'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/auth'
+    | '/gallery'
     | '/room'
     | '/shop'
     | '/chat/$characterId'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin'
     | '/auth'
+    | '/gallery'
     | '/room'
     | '/shop'
     | '/chat/$characterId'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRoute
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
+  GalleryRoute: typeof GalleryRoute
   RoomRoute: typeof RoomRoute
   ShopRoute: typeof ShopRoute
   ChatCharacterIdRoute: typeof ChatCharacterIdRoute
@@ -189,6 +202,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/room': {
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRoute,
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
+  GalleryRoute: GalleryRoute,
   RoomRoute: RoomRoute,
   ShopRoute: ShopRoute,
   ChatCharacterIdRoute: ChatCharacterIdRoute,
