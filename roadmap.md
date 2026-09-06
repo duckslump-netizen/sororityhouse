@@ -1,11 +1,8 @@
 # Roadmap
 
-Fresh start (Sep 6). The whole site was cleared except the Shopify store.
-
-## Kept
-- [x] Shopify store connection, products and images (untouched in Shopify)
-- [x] /shop, /product/$handle, cart drawer, Shopify checkout
-- [x] Minimal home page linking to the shop
-
-## Next
-- [ ] Decide what the new site should be and build it
+## Current: psycho clown rebuild
+- [ ] Disconnect Shopify, remove shop/product/cart pages
+- [ ] Clown character roster (6) with portraits, tags, teasers, lock rules
+- [ ] Home page: welcome + challenge + hallway of doors
+- [ ] Gallery page with locked/blurred clowns
+- [ ] Stripe plans + checkout page
