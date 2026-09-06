@@ -5,13 +5,13 @@ import { clowns, isOpen, unlockLabel } from "@/lib/clowns";
 export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
-      { title: "The Clowns | The Funhouse" },
+      { title: "The Clowns | Chanceys" },
       {
         name: "description",
         content:
           "Meet every clown behind the funhouse doors — the greeter, the stitch, the harlequin, the silence, the ringmaster and the porcelain.",
       },
-      { property: "og:title", content: "The Clowns | The Funhouse" },
+      { property: "og:title", content: "The Clowns | Chanceys" },
       {
         property: "og:description",
         content: "Every clown behind the funhouse doors, and what it takes to get past each one.",
@@ -28,7 +28,7 @@ function GalleryPage() {
     <main className="min-h-screen bg-background px-5 py-14">
       <div className="mx-auto max-w-6xl">
         <Link to="/" className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-          Back to the funhouse
+          Back to Chanceys
         </Link>
         <h1 className="mt-3 text-4xl font-black uppercase tracking-tight md:text-6xl">
           The Clowns
