@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS public.messages CASCADE;
+DROP TABLE IF EXISTS public.message_usage CASCADE;
+DROP TABLE IF EXISTS public.monthly_message_usage CASCADE;
+DROP TABLE IF EXISTS public.girl_suggestions CASCADE;
+DROP TABLE IF EXISTS public.referrals CASCADE;
+DROP TABLE IF EXISTS public.subscriptions CASCADE;
+DROP TABLE IF EXISTS public.character_settings CASCADE;
+DROP TABLE IF EXISTS public.user_roles CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+DROP FUNCTION IF EXISTS public.increment_monthly_usage(uuid, integer) CASCADE;
+DROP FUNCTION IF EXISTS public.increment_message_usage(uuid) CASCADE;
+DROP FUNCTION IF EXISTS public.has_role(uuid, public.app_role) CASCADE;
+DROP FUNCTION IF EXISTS public.handle_new_user() CASCADE;
+DROP TYPE IF EXISTS public.app_role CASCADE;
