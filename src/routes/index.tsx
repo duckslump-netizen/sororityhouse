@@ -193,11 +193,15 @@ function Index() {
           two open doors. Willow, Brittany, Sasha and Piper stay behind theirs until you prove
           you're worth it.
         </p>
-        <div className="mt-6 flex justify-center gap-3">
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button variant="hero" size="lg" onClick={startTrial}>
             {user ? "Go to my account" : "Start free — 25 messages"}
           </Button>
+          <Button variant="outline" size="lg" asChild>
+            <Link to="/gallery">See the whole house</Link>
+          </Button>
         </div>
+
         <p className="mt-4 text-center text-xs text-muted-foreground">
           No card required. The trial ends at message 50.
         </p>
