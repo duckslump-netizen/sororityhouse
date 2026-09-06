@@ -7,13 +7,13 @@ import hallway from "@/assets/funhouse-hall.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "The Funhouse — Can You Talk Your Way Past the Clowns?" },
+      { title: "Chanceys — Can You Talk Your Way Past the Clowns?" },
       {
         name: "description",
         content:
-          "Twelve doors, six psycho clowns and one rule: charm your way through or get sent back out the front gate. Start the funhouse challenge.",
+          "Twelve doors, six psycho clowns and one rule: charm your way through or get sent back out the front gate. Start the Chanceys challenge.",
       },
-      { property: "og:title", content: "The Funhouse — Can You Talk Your Way Past the Clowns?" },
+      { property: "og:title", content: "Chanceys — Can You Talk Your Way Past the Clowns?" },
       {
         property: "og:description",
         content:
@@ -46,7 +46,7 @@ function HomePage() {
             Step right up
           </p>
           <h1 className="mt-4 text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-7xl">
-            Welcome to <span className="text-gradient-neon">the Funhouse</span>
+            Welcome to <span className="text-gradient-neon">Chanceys</span>
           </h1>
           <p className="mt-5 text-xl text-foreground/80 md:text-2xl">
             Can you make it out, or will you crack first?
